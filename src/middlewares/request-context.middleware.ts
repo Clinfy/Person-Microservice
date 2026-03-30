@@ -3,12 +3,13 @@ import { NextFunction, Request, Response } from 'express';
 import { RequestContextService } from 'src/common/context/request-context.service';
 import { isAxiosError } from 'axios';
 import { REQUEST_CONTEXT_AUTH_ERROR_KEY } from 'src/common/context/request-context.constants';
+import { AuthClientService } from 'src/clients/auth/auth-client.service';
 
 @Injectable()
 export class RequestContextMiddleware implements NestMiddleware {
   constructor(
     private readonly contextService: RequestContextService,
-    private readonly userClientService: UsersClientService,
+    private readonly authClientService: AuthClientService,
   ) {}
 
   use(req: Request, _res: Response, next: NextFunction) {
@@ -20,7 +21,7 @@ export class RequestContextMiddleware implements NestMiddleware {
       }
 
       try {
-        const user = await this.userClientService.getMe(req);
+        const user = await this.authClientService.getMe(req);
         this.contextService.setUser(user);
         delete (req as any)[REQUEST_CONTEXT_AUTH_ERROR_KEY];
         next();
