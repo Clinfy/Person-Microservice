@@ -8,6 +8,10 @@ class EnvironmentVariables {
 
   @IsString()
   @IsNotEmpty()
+  RABBITMQ_URL: string;
+
+  @IsString()
+  @IsNotEmpty()
   AUTH_SERVICE_URL: string;
 
   @IsString()
