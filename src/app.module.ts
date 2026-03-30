@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -11,6 +11,9 @@ import 'winston-daily-rotate-file';
 import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { AuthClientModule } from 'src/clients/auth/auth-client.module';
 import { AuthGuard } from 'src/common/guards/auth.guard';
+import { RequestContextMiddleware } from 'src/middlewares/request-context.middleware';
+import { RequestContextModule } from 'src/common/context/request-context.module';
+import { CronModule } from 'src/cron/cron.module';
 
 @Module({
   imports: [
@@ -59,9 +62,15 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
     }),
 
     TypeOrmModule.forFeature(entities),
-    AuthClientModule
+    AuthClientModule,
+    RequestContextModule,
+    CronModule,
   ],
   controllers: [AppController],
   providers: [AppService, AuthGuard, AllExceptionsFilter],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestContextMiddleware).forRoutes('*');
+  }
+}
