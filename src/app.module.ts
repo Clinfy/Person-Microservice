@@ -14,6 +14,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RequestContextMiddleware } from 'src/middlewares/request-context.middleware';
 import { RequestContextModule } from 'src/common/context/request-context.module';
 import { CronModule } from 'src/cron/cron.module';
+import { GenderModule } from 'src/services/gender/gender.module';
 
 @Module({
   imports: [
@@ -65,9 +66,10 @@ import { CronModule } from 'src/cron/cron.module';
     AuthClientModule,
     RequestContextModule,
     CronModule,
+    GenderModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthGuard, AllExceptionsFilter],
+  providers: [AppService, AuthGuard, AllExceptionsFilter ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
