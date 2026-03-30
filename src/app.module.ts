@@ -22,8 +22,9 @@ import { entities } from 'src/entities';
         entities: [...entities],
         synchronize: true,
       })
-    })
+    }),
 
+    TypeOrmModule.forFeature(entities)
   ],
   controllers: [AppController],
   providers: [AppService],
