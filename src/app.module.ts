@@ -10,6 +10,7 @@ import winston from 'winston';
 import 'winston-daily-rotate-file';
 import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { AuthClientModule } from 'src/clients/auth/auth-client.module';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @Module({
   imports: [
@@ -61,6 +62,6 @@ import { AuthClientModule } from 'src/clients/auth/auth-client.module';
     AuthClientModule
   ],
   controllers: [AppController],
-  providers: [AppService, AllExceptionsFilter],
+  providers: [AppService, AuthGuard, AllExceptionsFilter],
 })
 export class AppModule {}
