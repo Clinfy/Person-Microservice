@@ -1,4 +1,4 @@
-import { IsDate, IsEmail, IsNotEmpty, IsPhoneNumber, IsString, IsUUID, Matches } from 'class-validator';
+import { IsDate, IsEmail, IsIn, IsNotEmpty, IsPhoneNumber, IsString, IsUUID, Matches } from 'class-validator';
 import { AddressDto } from 'src/interfaces/dto/address.dto';
 
 export class CreatePersonDto {
@@ -32,5 +32,14 @@ export class CreatePersonDto {
   @IsNotEmpty({ message: 'gender is obligatory' })
   @IsUUID('4', { message: 'gender must be a valid UUID' })
   gender: string;
+}
 
+export class AssignPersonRoleDto {
+  @IsUUID('4')
+  @IsNotEmpty()
+  person_id: string;
+
+  @IsIn(['employee', 'patient'])
+  @IsNotEmpty()
+  role: 'employee' | 'patient';
 }
