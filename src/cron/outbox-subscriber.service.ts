@@ -32,13 +32,14 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
     const metadata = event.metadata;
     const entityName = this.resolveEntityName(metadata, entity);
     const primaryKeys = this.extractPrimaryKeys(metadata, entity);
+    const createdBy = entity?.['created_by'] as { id?: string; email?: string } | null;
 
     const payload = {
       action: `${entityName.toUpperCase()}_CREATED`,
       entity: entityName,
       primary_key: primaryKeys,
-      done_by_id: null,
-      done_by_email: null,
+      done_by_id: createdBy?.id ?? null,
+      done_by_email: createdBy?.email ?? null,
       timestamp: new Date().toISOString(),
     };
 
