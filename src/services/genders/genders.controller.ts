@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
-import { GendersService } from 'src/services/gender/gender.service';
+import { GendersService } from 'src/services/genders/genders.service';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { EndpointKey } from 'src/common/decorators/endpoint-key.decorator';
 import { CreateGenderDto, PatchGenderDto } from 'src/interfaces/dto/gender.dto';

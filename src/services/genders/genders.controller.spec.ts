@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, HttpStatus } from '@nestjs/common';
-import { GendersController } from './gender.controller';
-import { GendersService } from './gender.service';
+import { GendersController } from './genders.controller';
+import { GendersService } from './genders.service';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { GenderEntity } from 'src/entities/gender.entity';
-import { GenderErrorCodes, GenderException } from './gender.exception';
+import { GenderErrorCodes, GenderException } from './genders.exception';
 import { PaginatedResponseDto, PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
 import { CreateGenderDto, PatchGenderDto } from 'src/interfaces/dto/gender.dto';
 

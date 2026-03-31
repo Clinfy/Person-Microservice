@@ -1,8 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { GenderRepository } from 'src/services/gender/gender.repository';
+import { GenderRepository } from 'src/services/genders/genders.repository';
 import { CreateGenderDto, PatchGenderDto } from 'src/interfaces/dto/gender.dto';
 import { GenderEntity } from 'src/entities/gender.entity';
-import { GenderErrorCodes, GenderException } from 'src/services/gender/gender.exception';
+import { GenderErrorCodes, GenderException } from 'src/services/genders/genders.exception';
 import { RequestContextService } from 'src/common/context/request-context.service';
 import { PaginatedResponseDto, PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
 

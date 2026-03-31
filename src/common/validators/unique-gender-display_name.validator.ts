@@ -7,7 +7,7 @@ import {
 } from 'class-validator';
 import { DataSource, Not } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { GenderErrorCodes } from 'src/services/gender/gender.exception';
+import { GenderErrorCodes } from 'src/services/genders/genders.exception';
 import { GenderEntity } from 'src/entities/gender.entity';
 
 @ValidatorConstraint({ name: 'IsUniqueGenderDisplayName', async: true })
