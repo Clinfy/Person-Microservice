@@ -18,6 +18,7 @@ import { OutboxCleanupService } from 'src/cron/outbox-cleanup.service';
 import { OutboxSubscriberService } from 'src/cron/outbox-subscriber.service';
 import { OutboxPublisherService } from 'src/cron/outbox-publisher.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     }),
 
     TypeOrmModule.forFeature(entities),
+    ScheduleModule.forRoot(),
     AuthClientModule,
     RequestContextModule,
     GenderModule,
