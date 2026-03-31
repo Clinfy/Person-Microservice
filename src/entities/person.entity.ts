@@ -6,12 +6,14 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { GenderEntity } from 'src/entities/gender.entity';
 import type { IGeoref } from 'src/clients/georef/georef.interface';
 import type { AuthUser } from 'src/clients/auth/auth-client.interface';
 
+@Unique('UQ_person_personal_id', ['personal_id'])
 @Entity('person')
 export class PersonEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -33,7 +35,7 @@ export class PersonEntity extends BaseEntity {
   contact_phone: string;
 
   @Column()
-  personal_id: number;
+  personal_id: string;
 
   @Column({ type: 'jsonb' })
   address: IGeoref;
