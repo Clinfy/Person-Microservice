@@ -4,6 +4,7 @@ import { BaseServiceException } from 'src/common/exceptions/base-service.excepti
 export enum PersonErrorCodes {
   PERSON_NOT_FOUND = 'PERSON_NOT_FOUND',
   PERSON_ALREADY_EXISTS = 'PERSON_ALREADY_EXISTS',
+  PERSON_CREATION_FAILED = 'PERSON_CREATION_FAILED',
 }
 
 export class PersonException extends BaseServiceException {
