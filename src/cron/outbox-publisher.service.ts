@@ -13,6 +13,7 @@ import { serializeError } from 'src/common/utils/logger-format.util';
 export class OutboxPublisherService implements OnModuleInit {
   private static readonly BATCH_SIZE = 100;
   private static readonly PROCESSING_TIMEOUT_MS = 60_000;
+  private static readonly MAX_RETRIES = 5;
 
   constructor(
     @InjectRepository(OutboxEntity)
@@ -43,9 +44,15 @@ export class OutboxPublisherService implements OnModuleInit {
           claimed_at: null,
         });
       } catch (error) {
+        const nextRetryCount = event.retry_count + 1;
+        const isFailed = nextRetryCount >= OutboxPublisherService.MAX_RETRIES;
+        const lastError = String(error?.message ?? error).slice(0, 500);
+
         await this.outboxRepository.update(event.id, {
-          status: OutboxStatus.PENDING,
+          status: isFailed ? OutboxStatus.FAILED : OutboxStatus.PENDING,
           claimed_at: null,
+          retry_count: nextRetryCount,
+          last_error: lastError,
         });
 
         this.logger.warn('Error publishing event', {
@@ -53,6 +60,8 @@ export class OutboxPublisherService implements OnModuleInit {
           operation: 'handleAuditEvents',
           eventId: event.id,
           pattern: event.pattern,
+          retryCount: nextRetryCount,
+          isFailed,
           error: serializeError(error),
         });
       }
@@ -72,6 +81,9 @@ export class OutboxPublisherService implements OnModuleInit {
           destination: 'audit_queue',
         })
         .andWhere(
+          // FAILED rows are intentionally excluded: they exceeded MAX_RETRIES
+          // and are left for manual review. Only PENDING and stale PROCESSING
+          // rows (stuck beyond PROCESSING_TIMEOUT_MS) are eligible for claiming.
           new Brackets((qb) => {
             qb.where('outbox.status = :pending', {
               pending: OutboxStatus.PENDING,
