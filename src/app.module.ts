@@ -21,6 +21,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ScheduleModule } from '@nestjs/schedule';
 import { IsUniqueGenderDisplayNameConstraint } from 'src/common/validators/unique-gender-display_name.validator';
 import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gender-code.validator';
+import { PersonsModule } from 'src/services/persons/persons.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gende
     AuthClientModule,
     RequestContextModule,
     GendersModule,
+    PersonsModule,
   ],
   controllers: [AppController],
   providers: [
