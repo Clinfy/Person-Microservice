@@ -56,7 +56,7 @@ export class PersonEntity extends BaseEntity {
   @Column({ type: 'enum', enum: PersonStatus, default: PersonStatus.PENDING })
   status: PersonStatus;
 
-  @Column({default: false})
+  @Column({ default: false })
   is_employee: boolean;
 
   @CreateDateColumn()

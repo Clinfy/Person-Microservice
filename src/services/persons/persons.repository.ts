@@ -31,7 +31,7 @@ export class PersonsRepository {
     return await this.ormRepository.findOneBy({ id });
   }
 
-  async findOneByPersonalId (id: number): Promise<PersonEntity | null> {
+  async findOneByPersonalId(id: number): Promise<PersonEntity | null> {
     return await this.ormRepository.findOneBy({ personal_id: id });
   }
 

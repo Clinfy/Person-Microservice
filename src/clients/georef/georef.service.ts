@@ -41,7 +41,7 @@ export class GeorefService {
       throw new GeorefException(
         'Multiple addresses found. Please provide more specific information.',
         GeorefErrorCodes.ADDRESS_NOT_EXACTLY_MATCHED,
-      HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     }
     const data = response.data.direcciones[0];
@@ -86,4 +86,3 @@ export class GeorefService {
     return georefApi;
   }
 }
-
