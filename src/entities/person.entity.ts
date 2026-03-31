@@ -12,12 +12,6 @@ import { GenderEntity } from 'src/entities/gender.entity';
 import type { IGeoref } from 'src/clients/georef/georef.interface';
 import type { AuthUser } from 'src/clients/auth/auth-client.interface';
 
-export enum PersonStatus {
-  PENDING = 'PENDING',
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-}
-
 @Entity('person')
 export class PersonEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -52,9 +46,6 @@ export class PersonEntity extends BaseEntity {
   })
   @JoinColumn()
   gender: GenderEntity;
-
-  @Column({ type: 'enum', enum: PersonStatus, default: PersonStatus.PENDING })
-  status: PersonStatus;
 
   @Column({ default: false })
   is_employee: boolean;
