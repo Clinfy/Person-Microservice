@@ -9,16 +9,12 @@ import {
   RemoveEvent,
   UpdateEvent,
 } from 'typeorm';
-import { RequestContextService } from 'src/common/context/request-context.service';
 import { OutboxEntity } from 'src/entities/outbox.entity';
 
 @Injectable()
 @EventSubscriber()
 export class OutboxSubscriberService implements EntitySubscriberInterface {
-  constructor(
-    private readonly dataSource: DataSource,
-    private readonly contextService: RequestContextService,
-  ) {
+  constructor(private readonly dataSource: DataSource) {
     this.dataSource.subscribers.push(this);
   }
 
@@ -33,7 +29,6 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
       return;
     }
 
-    const user = this.contextService.getCurrentUser();
     const metadata = event.metadata;
     const entityName = this.resolveEntityName(metadata, entity);
     const primaryKeys = this.extractPrimaryKeys(metadata, entity);
@@ -42,8 +37,8 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
       action: `${entityName.toUpperCase()}_CREATED`,
       entity: entityName,
       primary_key: primaryKeys,
-      done_by_id: user?.id ?? null,
-      done_by_email: user?.email ?? null,
+      done_by_id: null,
+      done_by_email: null,
       timestamp: new Date().toISOString(),
     };
 
@@ -59,7 +54,6 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
       return;
     }
 
-    const user = this.contextService.getCurrentUser();
     const metadata = event.metadata;
     const entityName = this.resolveEntityName(metadata, entity);
     const primaryKeys = this.extractPrimaryKeys(metadata, entity);
@@ -68,8 +62,8 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
       action: `${entityName.toUpperCase()}_UPDATED`,
       entity: entityName,
       primary_key: primaryKeys,
-      done_by_id: user?.id ?? null,
-      done_by_email: user?.email ?? null,
+      done_by_id: null,
+      done_by_email: null,
       timestamp: new Date().toISOString(),
     };
 
@@ -85,7 +79,6 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
       return;
     }
 
-    const user = this.contextService.getCurrentUser();
     const metadata = event.metadata;
     const entityName = this.resolveEntityName(metadata, entity);
     const primaryKeys = this.extractPrimaryKeys(metadata, entity);
@@ -94,8 +87,8 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
       action: `${entityName.toUpperCase()}_DELETED`,
       entity: entityName,
       primary_key: primaryKeys,
-      done_by_id: user?.id ?? null,
-      done_by_email: user?.email ?? null,
+      done_by_id: null,
+      done_by_email: null,
       timestamp: new Date().toISOString(),
     };
 
