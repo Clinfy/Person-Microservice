@@ -19,6 +19,8 @@ import { OutboxSubscriberService } from 'src/cron/outbox-subscriber.service';
 import { OutboxPublisherService } from 'src/cron/outbox-publisher.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ScheduleModule } from '@nestjs/schedule';
+import { IsUniqueGenderDisplayNameConstraint } from 'src/common/validators/unique-gender-display_name.validator';
+import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gender-code.validator';
 
 @Module({
   imports: [
@@ -99,6 +101,8 @@ import { ScheduleModule } from '@nestjs/schedule';
     OutboxCleanupService,
     OutboxSubscriberService,
     OutboxPublisherService,
+    IsUniqueGenderCodeConstraint,
+    IsUniqueGenderDisplayNameConstraint
   ],
 })
 export class AppModule implements NestModule {
