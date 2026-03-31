@@ -23,7 +23,7 @@ export class PersonsRepository {
     return this.ormRepository.merge(person, changes);
   }
 
-  async personalIdExists(personalId: number): Promise<boolean> {
+  async personalIdExists(personalId: string): Promise<boolean> {
     return await this.ormRepository.existsBy({ personal_id: personalId });
   }
 
@@ -31,8 +31,8 @@ export class PersonsRepository {
     return await this.ormRepository.findOneBy({ id });
   }
 
-  async findOneByPersonalId(id: number): Promise<PersonEntity | null> {
-    return await this.ormRepository.findOneBy({ personal_id: id });
+  async findOneByPersonalId(personalId: string): Promise<PersonEntity | null> {
+    return await this.ormRepository.findOneBy({ personal_id: personalId });
   }
 
   async findAll(query: PaginationQueryDto): Promise<[PersonEntity[], number]> {
