@@ -9,6 +9,6 @@ import { GenderRepository } from 'src/services/gender/gender.repository';
   imports: [TypeOrmModule.forFeature([GenderEntity])],
   controllers: [GenderController],
   providers: [GenderService, GenderRepository],
-  exports: [GenderService]
+  exports: [GenderService],
 })
 export class GenderModule {}
