@@ -6,6 +6,7 @@ import {
   EntitySubscriberInterface,
   EventSubscriber,
   InsertEvent,
+  RemoveEvent,
   UpdateEvent,
 } from 'typeorm';
 import { RequestContextService } from 'src/common/context/request-context.service';
@@ -77,7 +78,7 @@ export class OutboxSubscriberService implements EntitySubscriberInterface {
     await this.createOutboxRecord(event.manager, pattern, payload);
   }
 
-  async afterRemove(event: UpdateEvent<unknown>) {
+  async afterRemove(event: RemoveEvent<unknown>) {
     const entity = event.entity as Record<string, unknown> | undefined;
 
     if (!entity || this.shouldSkip(event.metadata)) {
