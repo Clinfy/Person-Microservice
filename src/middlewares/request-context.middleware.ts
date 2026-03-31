@@ -1,39 +1,48 @@
 import { HttpException, Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { RequestContextService } from 'src/common/context/request-context.service';
 import { isAxiosError } from 'axios';
 import { REQUEST_CONTEXT_AUTH_ERROR_KEY } from 'src/common/context/request-context.constants';
 import { AuthClientService } from 'src/clients/auth/auth-client.service';
+import { RequestContextService } from 'src/common/context/request-context.service';
+import { extractAuthToken } from 'src/common/utils/extract-bearer-token.util';
 
 @Injectable()
 export class RequestContextMiddleware implements NestMiddleware {
   constructor(
-    private readonly contextService: RequestContextService,
     private readonly authClientService: AuthClientService,
+    private readonly contextService: RequestContextService,
   ) {}
 
-  use(req: Request, _res: Response, next: NextFunction) {
-    this.contextService.start(async () => {
-      const authHeader = req.headers['authorization'] ?? req.headers['Authorization'];
-      if (!authHeader || (typeof authHeader === 'string' && authHeader.trim().length === 0)) {
+  use(req: Request, _res: Response, next: NextFunction): void {
+    this.contextService.run(() => {
+      let token: string | null = null;
+      try {
+        token = extractAuthToken(req);
+      } catch {
+        // no token present
+      }
+
+      if (!token) {
         next();
         return;
       }
 
-      try {
-        const user = await this.authClientService.getMe(req);
-        this.contextService.setUser(user);
-        delete (req as any)[REQUEST_CONTEXT_AUTH_ERROR_KEY];
-        next();
-      } catch (error) {
-        const unauthorizedError = this.mapUnauthorizedError(error);
-        if (unauthorizedError) {
-          (req as any)[REQUEST_CONTEXT_AUTH_ERROR_KEY] = unauthorizedError;
+      this.authClientService
+        .getMe(req)
+        .then((user) => {
+          this.contextService.setUser(user);
+          delete (req as any)[REQUEST_CONTEXT_AUTH_ERROR_KEY];
           next();
-          return;
-        }
-        next(error);
-      }
+        })
+        .catch((error) => {
+          const unauthorizedError = this.mapUnauthorizedError(error);
+          if (unauthorizedError) {
+            (req as any)[REQUEST_CONTEXT_AUTH_ERROR_KEY] = unauthorizedError;
+            next();
+            return;
+          }
+          next(error);
+        });
     });
   }
 
