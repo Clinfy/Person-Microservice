@@ -15,7 +15,7 @@ export class GendersService {
 
   async create(dto: CreateGenderDto): Promise<GenderEntity> {
     try {
-      return this.genderRepository.save(
+      return await this.genderRepository.save(
         this.genderRepository.create({
           ...dto,
           created_by: this.contextService.getCurrentUser(),
