@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientProxy } from '@nestjs/microservices';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -10,7 +10,7 @@ import { OutboxEntity, OutboxStatus } from 'src/entities/outbox.entity';
 import { serializeError } from 'src/common/utils/logger-format.util';
 
 @Injectable()
-export class OutboxPublisherService {
+export class OutboxPublisherService implements OnModuleInit {
   private static readonly BATCH_SIZE = 100;
   private static readonly PROCESSING_TIMEOUT_MS = 60_000;
 
@@ -25,6 +25,10 @@ export class OutboxPublisherService {
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly logger: Logger,
   ) {}
+
+  async onModuleInit(): Promise<void> {
+    await this.auditClient.connect();
+  }
 
   @Cron(CronExpression.EVERY_10_SECONDS)
   private async handleAuditEvents(): Promise<void> {
