@@ -14,20 +14,19 @@ export class RequestContextService {
     return this.asyncLocalStorage.run({ user: null }, callback);
   }
 
-  private getContext(): RequestContext {
-    const context = this.asyncLocalStorage.getStore();
-    if (!context) {
-      throw new Error('RequestContext not initialized');
-    }
-    return context;
+  private getContext(): RequestContext | null {
+    return this.asyncLocalStorage.getStore() ?? null;
   }
 
   setUser(user: AuthUser): void {
     const context = this.getContext();
+    if (!context) {
+      throw new Error('RequestContext not initialized');
+    }
     context.user = user;
   }
 
   getCurrentUser(): AuthUser | null {
-    return this.getContext()?.user;
+    return this.getContext()?.user ?? null;
   }
 }
