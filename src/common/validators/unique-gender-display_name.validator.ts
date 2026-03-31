@@ -33,7 +33,7 @@ export class IsUniqueGenderDisplayNameConstraint implements ValidatorConstraintI
   }
 }
 
-export function IsUniqueGenderDisplayName (options?: { ignoreIdField?: string }, validationOptions?: ValidationOptions) {
+export function IsUniqueGenderDisplayName(options?: { ignoreIdField?: string }, validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
       target: object.constructor,

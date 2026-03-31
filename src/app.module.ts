@@ -102,7 +102,7 @@ import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gende
     OutboxSubscriberService,
     OutboxPublisherService,
     IsUniqueGenderCodeConstraint,
-    IsUniqueGenderDisplayNameConstraint
+    IsUniqueGenderDisplayNameConstraint,
   ],
 })
 export class AppModule implements NestModule {

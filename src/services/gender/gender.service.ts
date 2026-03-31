@@ -18,7 +18,7 @@ export class GendersService {
       return this.genderRepository.save(
         this.genderRepository.create({
           ...dto,
-          created_by: this.contextService.getCurrentUser()
+          created_by: this.contextService.getCurrentUser(),
         }),
       );
     } catch (error) {
@@ -31,10 +31,10 @@ export class GendersService {
     }
   }
 
-  async edit (id:string, dto: PatchGenderDto): Promise<GenderEntity> {
+  async edit(id: string, dto: PatchGenderDto): Promise<GenderEntity> {
     try {
       const gender = await this.findOneById(id);
-      return await this.genderRepository.save(await this.genderRepository.merge(gender,dto))
+      return await this.genderRepository.save(await this.genderRepository.merge(gender, dto));
     } catch (error) {
       throw new GenderException(
         'Gender update failed',
@@ -45,11 +45,11 @@ export class GendersService {
     }
   }
 
-  async delete(id: string): Promise<{message: string}> {
+  async delete(id: string): Promise<{ message: string }> {
     try {
       const gender = await this.findOneById(id);
       await this.genderRepository.remove(gender);
-      return {message: `Gender ${gender.display_name} (${gender.code}) deleted successfully`}
+      return { message: `Gender ${gender.display_name} (${gender.code}) deleted successfully` };
     } catch (error) {
       throw new GenderException(
         'Gender deletion failed',
@@ -63,13 +63,9 @@ export class GendersService {
   async findOneById(id: string): Promise<GenderEntity> {
     const gender = await this.genderRepository.findOneById(id);
 
-    if(gender) return gender;
+    if (gender) return gender;
 
-    throw new GenderException(
-      'Gender not found',
-      GenderErrorCodes.GENDER_NOT_FOUND,
-      HttpStatus.NOT_FOUND,
-    );
+    throw new GenderException('Gender not found', GenderErrorCodes.GENDER_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 
   async findAll(query: PaginationQueryDto): Promise<PaginatedResponseDto<GenderEntity>> {
@@ -77,8 +73,12 @@ export class GendersService {
       const [data, total] = await this.genderRepository.findAll(query);
       return new PaginatedResponseDto(data, total, query.page, query.limit);
     } catch (error) {
-      throw new GenderException('Genders not found', error.status ?? GenderErrorCodes.GENDER_NOT_FOUND, HttpStatus.NOT_FOUND, error);
-
+      throw new GenderException(
+        'Genders not found',
+        error.status ?? GenderErrorCodes.GENDER_NOT_FOUND,
+        HttpStatus.NOT_FOUND,
+        error,
+      );
     }
   }
 }
