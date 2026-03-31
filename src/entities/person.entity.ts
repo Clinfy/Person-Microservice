@@ -18,7 +18,7 @@ export enum PersonStatus {
   INACTIVE = 'INACTIVE',
 }
 
-@Entity()
+@Entity('person')
 export class PersonEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -55,6 +55,9 @@ export class PersonEntity extends BaseEntity {
 
   @Column({ type: 'enum', enum: PersonStatus, default: PersonStatus.PENDING })
   status: PersonStatus;
+
+  @Column({default: false})
+  is_employee: boolean;
 
   @CreateDateColumn()
   created_at: Date;
