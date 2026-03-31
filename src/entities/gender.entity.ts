@@ -31,7 +31,7 @@ export class GenderEntity extends BaseEntity {
   created_at: Date;
 
   @Column({ type: 'jsonb', nullable: true })
-  created_by: AuthUser;
+  created_by: AuthUser | null;
 
   @UpdateDateColumn()
   updated_at: Date;
