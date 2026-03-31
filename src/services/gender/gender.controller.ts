@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } f
 import { GendersService } from 'src/services/gender/gender.service';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { EndpointKey } from 'src/common/decorators/endpoint-key.decorator';
-import { CreateGenderDto } from 'src/interfaces/dto/gender.dto';
+import { CreateGenderDto, PatchGenderDto } from 'src/interfaces/dto/gender.dto';
 import { GenderEntity } from 'src/entities/gender.entity';
 import { PaginatedResponseDto, PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
 
@@ -20,7 +20,7 @@ export class GendersController {
   @UseGuards(AuthGuard)
   @EndpointKey('genders.update')
   @Patch('edit/:id')
-  edit (@Param('id') id: string, @Body() dto: CreateGenderDto): Promise<GenderEntity> {
+  edit (@Param('id') id: string, @Body() dto: PatchGenderDto): Promise<GenderEntity> {
     return this.genderService.edit(id, dto);
   }
 
