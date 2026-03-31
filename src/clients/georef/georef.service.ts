@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { AddressDto, AddressPatchDto } from 'src/interfaces/dto/address.dto';
+import { AddressDto } from 'src/interfaces/dto/address.dto';
 import axios from 'axios';
 import { propagateAxiosError } from 'src/common/utils/propagate-axios-error';
 import { GeorefResponse, IGeoref } from 'src/clients/georef/georef.interface';
@@ -7,7 +7,7 @@ import { GeorefErrorCodes, GeorefException } from 'src/clients/georef/georef.exc
 
 @Injectable()
 export class GeorefService {
-  async normalizeAddress(dto: AddressDto | AddressPatchDto): Promise<IGeoref> {
+  async normalizeAddress(dto: AddressDto): Promise<IGeoref> {
     let direction: string;
 
     if (dto.street_two && dto.street_number) {
