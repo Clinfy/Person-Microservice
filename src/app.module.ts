@@ -13,7 +13,7 @@ import { AuthClientModule } from 'src/clients/auth/auth-client.module';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RequestContextMiddleware } from 'src/middlewares/request-context.middleware';
 import { RequestContextModule } from 'src/common/context/request-context.module';
-import { GenderModule } from 'src/services/gender/gender.module';
+import { GendersModule } from 'src/services/gender/gender.module';
 import { OutboxCleanupService } from 'src/cron/outbox-cleanup.service';
 import { OutboxSubscriberService } from 'src/cron/outbox-subscriber.service';
 import { OutboxPublisherService } from 'src/cron/outbox-publisher.service';
@@ -91,7 +91,7 @@ import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gende
     ScheduleModule.forRoot(),
     AuthClientModule,
     RequestContextModule,
-    GenderModule,
+    GendersModule,
   ],
   controllers: [AppController],
   providers: [

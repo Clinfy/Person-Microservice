@@ -7,7 +7,7 @@ import { RequestContextService } from 'src/common/context/request-context.servic
 import { PaginatedResponseDto, PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
 
 @Injectable()
-export class GenderService {
+export class GendersService {
   constructor(
     private readonly genderRepository: GenderRepository,
     private readonly contextService: RequestContextService,
