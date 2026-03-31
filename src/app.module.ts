@@ -13,8 +13,11 @@ import { AuthClientModule } from 'src/clients/auth/auth-client.module';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { RequestContextMiddleware } from 'src/middlewares/request-context.middleware';
 import { RequestContextModule } from 'src/common/context/request-context.module';
-import { CronModule } from 'src/cron/cron.module';
 import { GenderModule } from 'src/services/gender/gender.module';
+import { OutboxCleanupService } from 'src/cron/outbox-cleanup.service';
+import { OutboxSubscriberService } from 'src/cron/outbox-subscriber.service';
+import { OutboxPublisherService } from 'src/cron/outbox-publisher.service';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
@@ -35,6 +38,25 @@ import { GenderModule } from 'src/services/gender/gender.module';
         synchronize: true,
       }),
     }),
+
+    //RabbitMQ Audit Service Module
+    ClientsModule.registerAsync([
+      {
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        name: 'AUDIT_SERVICE',
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URL') as string],
+            queue: 'audit_queue',
+            queueOptions: {
+              durable: true,
+            },
+          },
+        }),
+      },
+    ]),
 
     //Winston Logger Module
     WinstonModule.forRoot({
@@ -65,11 +87,17 @@ import { GenderModule } from 'src/services/gender/gender.module';
     TypeOrmModule.forFeature(entities),
     AuthClientModule,
     RequestContextModule,
-    CronModule,
     GenderModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthGuard, AllExceptionsFilter ],
+  providers: [
+    AppService,
+    AuthGuard,
+    AllExceptionsFilter,
+    OutboxCleanupService,
+    OutboxSubscriberService,
+    OutboxPublisherService,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
