@@ -15,7 +15,7 @@ export class GenderRepository {
     return await this.ormRepository.save(gender);
   }
 
-  create (gender: Partial<GenderEntity>): GenderEntity {
+  create(gender: Partial<GenderEntity>): GenderEntity {
     return this.ormRepository.create(gender);
   }
 
@@ -32,7 +32,7 @@ export class GenderRepository {
     return await this.ormRepository.findAndCount({
       skip: (page - 1) * limit,
       take: limit,
-      order: { code: 'ASC' }
+      order: { code: 'ASC' },
     });
   }
 

@@ -30,7 +30,6 @@ export class AuthClientService {
     return response.data;
   }
 
-
   async getEndpointPermissions(key: string, request: Request): Promise<string[]> {
     const authApi = await this.axiosAuthApi(request);
     const response = await authApi.get<string[]>(`/endpoint-permission-rules/get-endpoint-permissions/${key}`);
