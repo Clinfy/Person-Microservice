@@ -52,7 +52,7 @@ export class PersonEntity extends BaseEntity {
   @Column({ default: false })
   is_employee: boolean;
 
-  @Column({default: false})
+  @Column({ default: false })
   is_patient: boolean;
 
   @CreateDateColumn()

@@ -18,6 +18,7 @@ export class PersonsService {
     private readonly georefService: GeorefService,
     private readonly gendersService: GendersService,
     private readonly contextService: RequestContextService,
+
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly logger: Logger,
   ) {}

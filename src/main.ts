@@ -15,7 +15,6 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const rabbitMqUrl = configService.get<string>('RABBITMQ_URL');
 
-
   if (!rabbitMqUrl) {
     throw new Error('Environment variable RABBITMQ_URL is not defined');
   }
@@ -24,7 +23,7 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: [rabbitMqUrl] ,
+      urls: [rabbitMqUrl],
       queue: 'person_roles_queue',
       queueOptions: { durable: true },
       noAck: false,
