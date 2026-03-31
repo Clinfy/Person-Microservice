@@ -25,6 +25,12 @@ export class OutboxEntity {
   @Column({ type: 'enum', enum: OutboxStatus, default: OutboxStatus.PENDING })
   status: OutboxStatus;
 
+  @Column({ type: 'integer', default: 0 })
+  retry_count: number;
+
+  @Column({ type: 'varchar', nullable: true })
+  last_error: string | null;
+
   @Column({ type: 'timestamptz', nullable: true })
   claimed_at: Date | null;
 
