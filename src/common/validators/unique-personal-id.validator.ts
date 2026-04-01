@@ -10,7 +10,7 @@ import { Injectable } from '@nestjs/common';
 import { PersonEntity } from 'src/entities/person.entity';
 import { PersonErrorCodes } from 'src/services/persons/persons.exception';
 
-@ValidatorConstraint({ name: 'IsUniquePersonalIdValidator', async: true })
+@ValidatorConstraint({ name: 'IsUniquePersonalId', async: true })
 @Injectable()
 export class IsUniquePersonalIdValidatorConstraint implements ValidatorConstraintInterface {
   constructor(private readonly dataSource: DataSource) {}
@@ -33,7 +33,7 @@ export class IsUniquePersonalIdValidatorConstraint implements ValidatorConstrain
   }
 }
 
-export function IsUniquePersonalIdValidator(options?: { ignoreIdField?: string }, validationOptions?: ValidationOptions) {
+export function IsUniquePersonalId(options?: { ignoreIdField?: string }, validationOptions?: ValidationOptions) {
   return function (object: any, propertyName: string) {
     registerDecorator({
       target: object.constructor,
