@@ -12,6 +12,10 @@ class EnvironmentVariables {
 
   @IsString()
   @IsNotEmpty()
+  REDIS_URL: string;
+
+  @IsString()
+  @IsNotEmpty()
   AUTH_SERVICE_URL: string;
 
   @IsString()
