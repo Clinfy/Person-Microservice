@@ -25,6 +25,7 @@ import { PersonsModule } from 'src/services/persons/persons.module';
 import { ObservabilityModule } from 'src/observability/observability.module';
 import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 import { RedisModule } from 'src/common/redis/redis.module';
+import { IsUniquePersonalIdValidatorConstraint } from 'src/common/validators/unique-personal-id.validator';
 
 @Module({
   imports: [
@@ -111,6 +112,7 @@ import { RedisModule } from 'src/common/redis/redis.module';
     OutboxPublisherService,
     IsUniqueGenderCodeConstraint,
     IsUniqueGenderDisplayNameConstraint,
+    IsUniquePersonalIdValidatorConstraint,
   ],
 })
 export class AppModule implements NestModule {
