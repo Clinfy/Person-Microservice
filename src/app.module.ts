@@ -22,6 +22,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { IsUniqueGenderDisplayNameConstraint } from 'src/common/validators/unique-gender-display_name.validator';
 import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gender-code.validator';
 import { PersonsModule } from 'src/services/persons/persons.module';
+import { ObservabilityModule } from 'src/observability/observability.module';
 
 @Module({
   imports: [
@@ -94,6 +95,7 @@ import { PersonsModule } from 'src/services/persons/persons.module';
     RequestContextModule,
     GendersModule,
     PersonsModule,
+    ObservabilityModule
   ],
   controllers: [AppController],
   providers: [
