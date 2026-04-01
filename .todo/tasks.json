@@ -1,0 +1,90 @@
+[
+  {
+    "id": "TASK_1",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Agregar Guard Para API Key",
+    "description": "",
+    "status": "TODO",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 12,
+        "second": 58,
+        "nano": 503516190
+      }
+    },
+    "isImported": false
+  },
+  {
+    "id": "TASK_3",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Implementar funciones de patch para person",
+    "description": "",
+    "status": "TODO",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 13,
+        "second": 17,
+        "nano": 215457462
+      }
+    },
+    "isImported": false
+  },
+  {
+    "id": "TASK_6",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Terminar todos los endpoints de person",
+    "description": "",
+    "status": "TODO",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 13,
+        "second": 27,
+        "nano": 595843627
+      }
+    },
+    "isImported": false
+  },
+  {
+    "id": "TASK_10",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Incorporar redis para cache de person",
+    "description": "",
+    "status": "TODO",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 13,
+        "second": 41,
+        "nano": 523931564
+      }
+    },
+    "isImported": false
+  }
+]
