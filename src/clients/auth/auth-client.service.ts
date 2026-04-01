@@ -57,7 +57,7 @@ export class AuthClientService {
 
     authApi.interceptors.request.use(
       async (config) => {
-        config.headers['x-api-key'] = apiKey;
+        if (!config.headers['x-api-key']) config.headers['x-api-key'] = apiKey;
         config.headers['content-type'] = 'application/json';
         config.headers['x-forwarded-for'] = getClientIp(request);
         config.headers['x-real-ip'] = getClientIp(request);
