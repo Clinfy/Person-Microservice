@@ -24,6 +24,7 @@ import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gende
 import { PersonsModule } from 'src/services/persons/persons.module';
 import { ObservabilityModule } from 'src/observability/observability.module';
 import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
+import { RedisModule } from 'src/common/redis/redis.module';
 
 @Module({
   imports: [
@@ -96,7 +97,8 @@ import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
     RequestContextModule,
     GendersModule,
     PersonsModule,
-    ObservabilityModule
+    ObservabilityModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [
