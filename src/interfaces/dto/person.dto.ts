@@ -1,5 +1,6 @@
 import { IsDate, IsEmail, IsIn, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUUID, Matches } from 'class-validator';
 import { AddressDto } from 'src/interfaces/dto/address.dto';
+import { IsUniquePersonalId } from 'src/common/validators/unique-personal-id.validator';
 
 export class CreatePersonDto {
   @IsNotEmpty({ message: 'first name is obligatory' })
@@ -24,6 +25,7 @@ export class CreatePersonDto {
 
   @IsNotEmpty({ message: 'personal id is obligatory' })
   @Matches(/^\d{7,8}$/, { message: 'DNI must contain 7 or 8 digits' })
+  @IsUniquePersonalId()
   personal_id: string;
 
   @IsNotEmpty({ message: 'address is obligatory' })
@@ -65,6 +67,7 @@ export class PatchPersonGenderDto {
 export class PatchPersonIdDto {
   @IsNotEmpty({ message: 'personal id is obligatory' })
   @Matches(/^\d{7,8}$/, { message: 'DNI must contain 7 or 8 digits' })
+  @IsUniquePersonalId()
   personal_id: string;
 }
 
