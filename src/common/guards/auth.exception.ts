@@ -3,8 +3,9 @@ import { BaseServiceException } from 'src/common/exceptions/base-service.excepti
 
 export enum AuthErrorCodes {
   INSUFFICIENT_PERMISSIONS = 'INSUFFICIENT_PERMISSIONS',
-  AUTH_SERVICE_ERROR = 'AUTH_SERVICE_ERROR',
   AUTH_COOKIE_EXPIRED_INVALID = 'AUTH_COOKIE_EXPIRED_INVALID',
+  API_KEY_INVALID = 'API_KEY_INVALID',
+  API_KEY_HEADER_MISSING = 'API_KEY_HEADER_MISSING',
 }
 
 export class AuthException extends BaseServiceException {
