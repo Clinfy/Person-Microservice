@@ -20,7 +20,7 @@ export class MetricsController {
   async getMetrics(@Res() res: Response) {
     const enabled = this.config.get<string>('METRICS_ENABLED', 'true');
 
-    if (enabled !== 'true') {
+    if (!enabled) {
       throw new NotFoundException('Metrics endpoint is disabled');
     }
 
