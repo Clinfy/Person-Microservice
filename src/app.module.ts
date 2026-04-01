@@ -23,6 +23,7 @@ import { IsUniqueGenderDisplayNameConstraint } from 'src/common/validators/uniqu
 import { IsUniqueGenderCodeConstraint } from 'src/common/validators/unique-gender-code.validator';
 import { PersonsModule } from 'src/services/persons/persons.module';
 import { ObservabilityModule } from 'src/observability/observability.module';
+import { ApiKeyGuard } from 'src/common/guards/api-key.guard';
 
 @Module({
   imports: [
@@ -101,6 +102,7 @@ import { ObservabilityModule } from 'src/observability/observability.module';
   providers: [
     AppService,
     AuthGuard,
+    ApiKeyGuard,
     AllExceptionsFilter,
     OutboxCleanupService,
     OutboxSubscriberService,
