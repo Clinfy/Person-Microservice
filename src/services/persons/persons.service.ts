@@ -146,7 +146,7 @@ export class PersonsService implements OnModuleInit {
   private async loadPersonToRedis(person: PersonEntity): Promise<void> {
     try {
       const multi = this.redisService.raw.multi();
-      multi.set(this.redisKey(person.id), JSON.stringify(person));
+      multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)));
       multi.sAdd('persons', person.id);
       await multi.exec();
     } catch (error) {
