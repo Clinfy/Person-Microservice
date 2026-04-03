@@ -11,6 +11,8 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { serializeError } from 'src/common/utils/logger-format.util';
 import { RedisService } from 'src/common/redis/redis.service';
+import { IPerson } from 'src/interfaces/person.interface';
+import { differenceInYears } from 'date-fns';
 
 @Injectable()
 export class PersonsService implements OnModuleInit {
@@ -42,7 +44,7 @@ export class PersonsService implements OnModuleInit {
       const address = await this.georefService.normalizeAddress(dto.address);
       const gender = await this.gendersService.findOneById(dto.gender);
 
-      return await this.personsRepository.save(
+      const person = await this.personsRepository.save(
         this.personsRepository.create({
           ...dto,
           gender,
@@ -50,6 +52,10 @@ export class PersonsService implements OnModuleInit {
           created_by: this.contextService.getCurrentUser(),
         }),
       );
+
+      await this.loadPersonToRedis(person);
+      return person;
+
     } catch (error) {
       throw new PersonException(
         'Person creation failed',
@@ -122,7 +128,7 @@ export class PersonsService implements OnModuleInit {
       const multi = this.redisService.raw.multi();
 
       for (const person of persons) {
-        multi.set(this.redisKey(person.id), JSON.stringify(person));
+        multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)));
         multi.sAdd('persons', person.id);
       }
 
@@ -172,5 +178,19 @@ export class PersonsService implements OnModuleInit {
 
   private redisKey (id:string): string {
     return `person:${id}`;
+  }
+
+  private generatePersonInterface(person: PersonEntity): IPerson {
+    return {
+      first_name: person.first_name,
+      last_name: person.last_name,
+      personal_id: person.personal_id,
+      gender: person.gender.display_name,
+      birth_date: person.birth_date,
+      age: differenceInYears(new Date(), person.birth_date),
+      contact_email: person.contact_email,
+      contact_phone: person.contact_phone,
+      address: person.address
+    }
   }
 }
