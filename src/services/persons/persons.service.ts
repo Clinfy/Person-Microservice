@@ -10,6 +10,7 @@ import { PaginatedResponseDto, PaginationQueryDto } from 'src/interfaces/dto/pag
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
 import { serializeError } from 'src/common/utils/logger-format.util';
+import { RedisService } from 'src/common/redis/redis.service';
 
 @Injectable()
 export class PersonsService {
@@ -18,6 +19,7 @@ export class PersonsService {
     private readonly georefService: GeorefService,
     private readonly gendersService: GendersService,
     private readonly contextService: RequestContextService,
+    private readonly redisService: RedisService,
 
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly logger: Logger,
@@ -58,7 +60,7 @@ export class PersonsService {
     throw new PersonException('Person not found', PersonErrorCodes.PERSON_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 
-  async findAll(query: PaginationQueryDto): Promise<PaginatedResponseDto<PersonEntity>> {
+  async findAll(query: PaginationQueryDto = new PaginationQueryDto()): Promise<PaginatedResponseDto<PersonEntity>> {
     try {
       const [data, total] = await this.personsRepository.findAll(query);
       return new PaginatedResponseDto(data, total, query.page, query.limit);
@@ -98,5 +100,65 @@ export class PersonsService {
         error,
       );
     }
+  }
+
+  private async warmUpCache(): Promise<void> {
+    try {
+      const persons = await this.findAll().then(res => res.data);
+      if (persons.length === 0) return;
+
+      const multi = this.redisService.raw.multi();
+
+      for (const person of persons) {
+        multi.set(this.redisKey(person.id), JSON.stringify(person));
+        multi.sAdd('persons', person.id);
+      }
+
+      await multi.exec()
+
+    } catch (error) {
+      this.logger.error('Failed to warm up cache', {
+        context: 'PersonsService',
+        operation: 'warmUpCache',
+        error: serializeError(error),
+      });
+    }
+  }
+
+  private async loadPersonToRedis(person: PersonEntity): Promise<void> {
+    try {
+      const multi = this.redisService.raw.multi();
+      multi.set(this.redisKey(person.id), JSON.stringify(person));
+      multi.sAdd('persons', person.id);
+      await multi.exec();
+    } catch (error) {
+      this.logger.error('Failed to load person to Redis', {
+        context: 'PersonsService',
+        operation: 'loadPersonToRedis',
+        person_id: person.id,
+        error: serializeError(error),
+      });
+    }
+  }
+
+  private async invalidatePersonCache(id:string): Promise<void> {
+    try {
+      const multi = this.redisService.raw.multi();
+      multi.del(this.redisKey(id));
+      multi.sRem('persons', id);
+      await multi.exec();
+
+    } catch (error) {
+      this.logger.error('Failed to invalidate person cache', {
+        context: 'PersonsService',
+        operation: 'invalidatePersonCache',
+        person_id: id,
+        error: serializeError(error),
+      })
+    }
+  }
+
+  private redisKey (id:string): string {
+    return `person:${id}`;
   }
 }
