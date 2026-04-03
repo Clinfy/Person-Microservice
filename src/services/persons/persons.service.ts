@@ -1,4 +1,4 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PersonsRepository } from 'src/services/persons/persons.repository';
 import { GeorefService } from 'src/clients/georef/georef.service';
 import { AssignPersonRoleDto, CreatePersonDto } from 'src/interfaces/dto/person.dto';
@@ -13,7 +13,7 @@ import { serializeError } from 'src/common/utils/logger-format.util';
 import { RedisService } from 'src/common/redis/redis.service';
 
 @Injectable()
-export class PersonsService {
+export class PersonsService implements OnModuleInit {
   constructor(
     private readonly personsRepository: PersonsRepository,
     private readonly georefService: GeorefService,
@@ -24,6 +24,18 @@ export class PersonsService {
     @Inject(WINSTON_MODULE_PROVIDER)
     private readonly logger: Logger,
   ) {}
+
+  async onModuleInit(): Promise<void> {
+    try {
+      await this.warmUpCache();
+    } catch (error) {
+      this.logger.error('Failed to warm up cache', {
+        context: 'PersonsService',
+        operation: 'onModuleInit',
+        error: serializeError(error),
+      });
+    }
+  }
 
   async create(dto: CreatePersonDto): Promise<PersonEntity> {
     try {
