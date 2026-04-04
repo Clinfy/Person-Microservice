@@ -1,4 +1,16 @@
-import { IsDate, IsEmail, IsIn, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUUID, Matches } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsDate,
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsUUID,
+  Matches,
+} from 'class-validator';
 import { AddressDto } from 'src/interfaces/dto/address.dto';
 import { IsUniquePersonalId } from 'src/common/validators/unique-personal-id.validator';
 
@@ -79,4 +91,11 @@ export class AssignPersonRoleDto {
   @IsIn(['employee', 'patient'])
   @IsNotEmpty()
   role: 'employee' | 'patient';
+}
+
+export class BatchPersonDetailsDto {
+  @IsArray({ message: 'ids must be an array' })
+  @ArrayNotEmpty({ message: 'ids must not be empty' })
+  @IsUUID('4', { each: true, message: 'Each id must be a valid UUID v4' })
+  ids: string[];
 }
