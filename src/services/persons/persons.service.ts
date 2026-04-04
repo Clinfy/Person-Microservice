@@ -55,7 +55,6 @@ export class PersonsService implements OnModuleInit {
 
       await this.loadPersonToRedis(person);
       return person;
-
     } catch (error) {
       throw new PersonException(
         'Person creation failed',
@@ -120,9 +119,63 @@ export class PersonsService implements OnModuleInit {
     }
   }
 
+  async getPersonDetails(id: string): Promise<IPerson | null> {
+    try {
+      const cached = await this.redisService.raw.get(this.redisKey(id));
+      if (cached) return JSON.parse(cached) as IPerson;
+
+      const entity = await this.personsRepository.findOneById(id);
+      if (entity) return this.generatePersonInterface(entity);
+
+      return null;
+    } catch (error) {
+      this.logger.error('Failed to get person details', {
+        context: 'PersonsService',
+        operation: 'getPersonDetails',
+        person_id: id,
+        error: serializeError(error),
+      });
+      throw new PersonException('Person not found', PersonErrorCodes.PERSON_NOT_FOUND, HttpStatus.NOT_FOUND, error);
+    }
+  }
+
+  async getBatchPersonDetails(ids: string[]): Promise<Record<string, IPerson>> {
+    const result: Record<string, IPerson> = {};
+
+    const cached = await Promise.all(ids.map((id) => this.redisService.raw.get(this.redisKey(id))));
+
+    const misses: string[] = [];
+    for (let i = 0; i < ids.length; i++) {
+      const hit = cached[i];
+      if (hit === null) {
+        misses.push(ids[i]);
+      } else {
+        result[ids[i]] = JSON.parse(hit) as IPerson;
+      }
+    }
+
+    await Promise.all(
+      misses.map(async (id) => {
+        try {
+          const entity = await this.personsRepository.findOneById(id);
+          if (entity) result[id] = this.generatePersonInterface(entity);
+        } catch (error) {
+          this.logger.warn('Person not found during batch details fetch', {
+            context: 'PersonsService',
+            operation: 'getBatchPersonDetails',
+            person_id: id,
+            error: serializeError(error),
+          });
+        }
+      }),
+    );
+
+    return result;
+  }
+
   private async warmUpCache(): Promise<void> {
     try {
-      const persons = await this.findAll().then(res => res.data);
+      const persons = await this.findAll().then((res) => res.data);
       if (persons.length === 0) return;
 
       const multi = this.redisService.raw.multi();
@@ -132,8 +185,7 @@ export class PersonsService implements OnModuleInit {
         multi.sAdd('persons', person.id);
       }
 
-      await multi.exec()
-
+      await multi.exec();
     } catch (error) {
       this.logger.error('Failed to warm up cache', {
         context: 'PersonsService',
@@ -159,24 +211,23 @@ export class PersonsService implements OnModuleInit {
     }
   }
 
-  private async invalidatePersonCache(id:string): Promise<void> {
+  private async invalidatePersonCache(id: string): Promise<void> {
     try {
       const multi = this.redisService.raw.multi();
       multi.del(this.redisKey(id));
       multi.sRem('persons', id);
       await multi.exec();
-
     } catch (error) {
       this.logger.error('Failed to invalidate person cache', {
         context: 'PersonsService',
         operation: 'invalidatePersonCache',
         person_id: id,
         error: serializeError(error),
-      })
+      });
     }
   }
 
-  private redisKey (id:string): string {
+  private redisKey(id: string): string {
     return `person:${id}`;
   }
 
@@ -190,7 +241,7 @@ export class PersonsService implements OnModuleInit {
       age: differenceInYears(new Date(), person.birth_date),
       contact_email: person.contact_email,
       contact_phone: person.contact_phone,
-      address: person.address
-    }
+      address: person.address,
+    };
   }
 }
