@@ -14,7 +14,7 @@ export class PersonsController {
   @EndpointKey('persons.details')
   @Get(':id/details')
   async getPersonDetails(@Param('id', ParseUUIDPipe) id: string): Promise<IPerson> {
-    return await this.personsService.getPersonDetails(id);
+    return this.personsService.getPersonDetails(id);
   }
 
   @UseGuards(AuthGuard)
