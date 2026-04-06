@@ -3,6 +3,7 @@ import { GendersService } from 'src/services/genders/genders.service';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { EndpointKey } from 'src/common/decorators/endpoint-key.decorator';
 import { CreateGenderDto, PatchGenderDto } from 'src/interfaces/dto/gender.dto';
+import { IGender } from 'src/interfaces/gender.interface';
 import { GenderEntity } from 'src/entities/gender.entity';
 import { PaginatedResponseDto, PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
 
@@ -43,5 +44,12 @@ export class GendersController {
   @Get('all')
   findAll(@Query() query: PaginationQueryDto): Promise<PaginatedResponseDto<GenderEntity>> {
     return this.genderService.findAll(query);
+  }
+
+  @UseGuards(AuthGuard)
+  @EndpointKey('genders.details')
+  @Get('details')
+  getDetails(): Promise<IGender[]> {
+    return this.genderService.getGendersDetails();
   }
 }
