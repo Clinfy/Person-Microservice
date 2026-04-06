@@ -165,15 +165,14 @@ export class PersonsService implements OnModuleInit {
     }
   }
 
-  async getPersonDetails(id: string): Promise<IPerson | null> {
+  async getPersonDetails(id: string): Promise<IPerson> {
     try {
       const cached = await this.redisService.raw.get(this.redisKey(id));
       if (cached) return JSON.parse(cached) as IPerson;
 
-      const entity = await this.personsRepository.findOneById(id);
-      if (entity) return this.generatePersonInterface(entity);
-
-      return null;
+      const entity = await this.findOneById(id);
+      await this.loadPersonToRedis(entity);
+      return this.generatePersonInterface(entity);
     } catch (error) {
       this.logger.error('Failed to get person details', {
         context: 'PersonsService',
