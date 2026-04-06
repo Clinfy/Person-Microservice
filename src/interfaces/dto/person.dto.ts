@@ -51,23 +51,23 @@ export class CreatePersonDto {
 export class PatchPersonDto {
   @IsOptional()
   @IsString({ message: 'first name must be a string' })
-  first_name: string;
+  first_name?: string;
 
   @IsOptional()
   @IsString({ message: 'last name must be a string' })
-  last_name: string;
+  last_name?: string;
 
   @IsOptional()
   @IsDate({ message: 'birth date must be a date' })
-  birth_date: Date;
+  birth_date?: Date;
 
   @IsOptional()
   @IsEmail({}, { message: 'personal id must be a valid email' })
-  contact_email: string;
+  contact_email?: string;
 
   @IsOptional()
   @IsPhoneNumber('AR', { message: 'contact phone must be a valid phone number' })
-  contact_phone: string;
+  contact_phone?: string;
 }
 
 export class PatchPersonGenderDto {
