@@ -1,7 +1,13 @@
 import { HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PersonsRepository } from 'src/services/persons/persons.repository';
 import { GeorefService } from 'src/clients/georef/georef.service';
-import { AssignPersonRoleDto, CreatePersonDto } from 'src/interfaces/dto/person.dto';
+import {
+  AssignPersonRoleDto,
+  CreatePersonDto,
+  PatchPersonDto,
+  PatchPersonGenderDto,
+  PatchPersonIdDto,
+} from 'src/interfaces/dto/person.dto';
 import { PersonEntity } from 'src/entities/person.entity';
 import { GendersService } from 'src/services/genders/genders.service';
 import { RequestContextService } from 'src/common/context/request-context.service';
@@ -13,6 +19,7 @@ import { serializeError } from 'src/common/utils/logger-format.util';
 import { RedisService } from 'src/common/redis/redis.service';
 import { IPerson } from 'src/interfaces/person.interface';
 import { differenceInYears } from 'date-fns';
+import { AddressDto } from 'src/interfaces/dto/address.dto';
 
 @Injectable()
 export class PersonsService implements OnModuleInit {
@@ -89,6 +96,45 @@ export class PersonsService implements OnModuleInit {
         error,
       );
     }
+  }
+
+  async updatePersonalData (id:string, dto:PatchPersonDto): Promise<PersonEntity> {
+    const person = await this.findOneById(id);
+    const updated = await this.personsRepository.save(await this.personsRepository.merge(person, dto));
+    await this.invalidatePersonCache(id);
+    await this.loadPersonToRedis(updated);
+    return updated;
+  }
+
+  async updatePersonGender (id:string, dto: PatchPersonGenderDto): Promise<PersonEntity> {
+    const person = await this.findOneById(id);
+    const newGender = await this.gendersService.findOneById(dto.gender)
+
+    const updated = await this.personsRepository.save(await this.personsRepository.merge(person, { gender: newGender }));
+
+    await this.invalidatePersonCache(id);
+    await this.loadPersonToRedis(updated);
+    return updated;
+  }
+
+  async updatePersonalId (id:string, dto: PatchPersonIdDto): Promise<PersonEntity> {
+    const person = await this.findOneById(id);
+    const updated = await this.personsRepository.save(await this.personsRepository.merge(person, { personal_id: dto.personal_id }));
+
+    await this.invalidatePersonCache(id);
+    await this.loadPersonToRedis(updated);
+    return updated;
+  }
+
+  async updatePersonAddress (id:string, dto: AddressDto): Promise<PersonEntity> {
+    const person = await this.findOneById(id);
+    const newAddress = await this.georefService.normalizeAddress(dto);
+
+    const updated = await this.personsRepository.save(await this.personsRepository.merge(person, { address: newAddress }));
+
+    await this.invalidatePersonCache(id);
+    await this.loadPersonToRedis(updated);
+    return updated;
   }
 
   async updateRoles(dto: AssignPersonRoleDto): Promise<void> {
