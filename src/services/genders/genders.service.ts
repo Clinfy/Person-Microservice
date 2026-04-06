@@ -5,6 +5,7 @@ import { GenderEntity } from 'src/entities/gender.entity';
 import { GenderErrorCodes, GenderException } from 'src/services/genders/genders.exception';
 import { RequestContextService } from 'src/common/context/request-context.service';
 import { PaginatedResponseDto, PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
+import { IGender } from 'src/interfaces/gender.interface';
 
 @Injectable()
 export class GendersService {
@@ -60,6 +61,11 @@ export class GendersService {
     }
   }
 
+  async getGendersDetails(): Promise<IGender[]> {
+    const genders = await this.findAll()
+    return genders.data.map(gender => this.generateGenderInterface(gender))
+  }
+
   async findOneById(id: string): Promise<GenderEntity> {
     const gender = await this.genderRepository.findOneById(id);
 
@@ -68,7 +74,7 @@ export class GendersService {
     throw new GenderException('Gender not found', GenderErrorCodes.GENDER_NOT_FOUND, HttpStatus.NOT_FOUND);
   }
 
-  async findAll(query: PaginationQueryDto): Promise<PaginatedResponseDto<GenderEntity>> {
+  async findAll(query: PaginationQueryDto = new PaginationQueryDto()): Promise<PaginatedResponseDto<GenderEntity>> {
     try {
       const [data, total] = await this.genderRepository.findAll(query);
       return new PaginatedResponseDto(data, total, query.page, query.limit);
@@ -79,6 +85,13 @@ export class GendersService {
         HttpStatus.NOT_FOUND,
         error,
       );
+    }
+  }
+
+  private generateGenderInterface(gender: GenderEntity): IGender {
+    return {
+      id: gender.id,
+      name: gender.display_name
     }
   }
 }
