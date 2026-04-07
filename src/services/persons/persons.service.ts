@@ -237,7 +237,7 @@ export class PersonsService implements OnModuleInit {
         const ids: string[] = [];
 
         for (const person of result.data) {
-          multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)), { EX: 86400 });
+          multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)));
           ids.push(person.id);
         }
 
@@ -262,7 +262,7 @@ export class PersonsService implements OnModuleInit {
   private async loadPersonToRedis(person: PersonEntity): Promise<void> {
     try {
       const multi = this.redisService.raw.multi();
-      multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)), { EX: 86400 });
+      multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)));
       multi.sAdd('persons', person.id);
       await multi.exec();
     } catch (error) {
