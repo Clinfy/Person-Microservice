@@ -206,6 +206,7 @@ export class PersonsService implements OnModuleInit {
         const entities = await this.personsRepository.findByIds(misses);
         for (const entity of entities) {
           result[entity.id] = this.generatePersonInterface(entity);
+          await this.loadPersonToRedis(entity);
         }
       } catch (error) {
         this.logger.warn('Failed to fetch persons during batch details fetch', {
