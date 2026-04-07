@@ -98,7 +98,7 @@ export class PersonsService implements OnModuleInit {
     }
   }
 
-  async updatePersonalData (id:string, dto:PatchPersonDto): Promise<PersonEntity> {
+  async updatePersonalData(id: string, dto: PatchPersonDto): Promise<PersonEntity> {
     const person = await this.findOneById(id);
     const updated = await this.personsRepository.save(await this.personsRepository.merge(person, dto));
     await this.invalidatePersonCache(id);
@@ -106,9 +106,9 @@ export class PersonsService implements OnModuleInit {
     return updated;
   }
 
-  async updatePersonGender (id:string, dto: PatchPersonGenderDto): Promise<PersonEntity> {
+  async updatePersonGender(id: string, dto: PatchPersonGenderDto): Promise<PersonEntity> {
     const person = await this.findOneById(id);
-    const newGender = await this.gendersService.findOneById(dto.gender)
+    const newGender = await this.gendersService.findOneById(dto.gender);
 
     const updated = await this.personsRepository.save(await this.personsRepository.merge(person, { gender: newGender }));
 
@@ -117,16 +117,18 @@ export class PersonsService implements OnModuleInit {
     return updated;
   }
 
-  async updatePersonalId (id:string, dto: PatchPersonIdDto): Promise<PersonEntity> {
+  async updatePersonalId(id: string, dto: PatchPersonIdDto): Promise<PersonEntity> {
     const person = await this.findOneById(id);
-    const updated = await this.personsRepository.save(await this.personsRepository.merge(person, { personal_id: dto.personal_id }));
+    const updated = await this.personsRepository.save(
+      await this.personsRepository.merge(person, { personal_id: dto.personal_id }),
+    );
 
     await this.invalidatePersonCache(id);
     await this.loadPersonToRedis(updated);
     return updated;
   }
 
-  async updatePersonAddress (id:string, dto: AddressDto): Promise<PersonEntity> {
+  async updatePersonAddress(id: string, dto: AddressDto): Promise<PersonEntity> {
     const person = await this.findOneById(id);
     const newAddress = await this.georefService.normalizeAddress(dto);
 
@@ -199,38 +201,55 @@ export class PersonsService implements OnModuleInit {
       }
     }
 
-    await Promise.all(
-      misses.map(async (id) => {
-        try {
-          const entity = await this.personsRepository.findOneById(id);
-          if (entity) result[id] = this.generatePersonInterface(entity);
-        } catch (error) {
-          this.logger.warn('Person not found during batch details fetch', {
-            context: 'PersonsService',
-            operation: 'getBatchPersonDetails',
-            person_id: id,
-            error: serializeError(error),
-          });
+    if (misses.length > 0) {
+      try {
+        const entities = await this.personsRepository.findByIds(misses);
+        for (const entity of entities) {
+          result[entity.id] = this.generatePersonInterface(entity);
         }
-      }),
-    );
+      } catch (error) {
+        this.logger.warn('Failed to fetch persons during batch details fetch', {
+          context: 'PersonsService',
+          operation: 'getBatchPersonDetails',
+          person_ids: misses,
+          error: serializeError(error),
+        });
+      }
+    }
 
     return result;
   }
 
   private async warmUpCache(): Promise<void> {
+    const pageSize = 100;
+    let page = 1;
+    let fetched = 0;
+    let total: number;
+
     try {
-      const persons = await this.findAll().then((res) => res.data);
-      if (persons.length === 0) return;
+      do {
+        const result = await this.personsRepository.findAllForCache(page, pageSize);
+        total = result.total;
 
-      const multi = this.redisService.raw.multi();
+        if (result.data.length === 0) break;
 
-      for (const person of persons) {
-        multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)));
-        multi.sAdd('persons', person.id);
-      }
+        const multi = this.redisService.raw.multi();
+        const ids: string[] = [];
 
-      await multi.exec();
+        for (const person of result.data) {
+          multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)), { EX: 86400 });
+          ids.push(person.id);
+        }
+
+        if (ids.length > 0) {
+          multi.sAdd('persons', ids);
+        }
+
+        await multi.exec();
+
+        fetched += result.data.length;
+        page++;
+      } while (fetched < total);
     } catch (error) {
       this.logger.error('Failed to warm up cache', {
         context: 'PersonsService',
@@ -243,7 +262,7 @@ export class PersonsService implements OnModuleInit {
   private async loadPersonToRedis(person: PersonEntity): Promise<void> {
     try {
       const multi = this.redisService.raw.multi();
-      multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)));
+      multi.set(this.redisKey(person.id), JSON.stringify(this.generatePersonInterface(person)), { EX: 86400 });
       multi.sAdd('persons', person.id);
       await multi.exec();
     } catch (error) {
