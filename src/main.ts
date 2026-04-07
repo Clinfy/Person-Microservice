@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from 'src/common/filters/all-exceptions.filter';
 import { useContainer } from 'class-validator';
 import { BadRequestException, HttpStatus, ValidationPipe } from '@nestjs/common';
-import { findFirstErrorCode, findFirstMessage } from 'src/common/utils/find-erros-data.util';
+import { findFirstErrorCode, findFirstMessage } from 'src/common/utils/find-errors-data.util';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 
