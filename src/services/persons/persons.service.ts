@@ -291,11 +291,11 @@ export class PersonsService implements OnModuleInit {
     }
   }
 
-  private redisKey(id: string): string {
+  redisKey(id: string): string {
     return `person:${id}`;
   }
 
-  private generatePersonInterface(person: PersonEntity): IPerson {
+  generatePersonInterface(person: PersonEntity): IPerson {
     return {
       first_name: person.first_name,
       last_name: person.last_name,
