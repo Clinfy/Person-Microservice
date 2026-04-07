@@ -62,8 +62,8 @@ export class GendersService {
   }
 
   async getGendersDetails(): Promise<IGender[]> {
-    const genders = await this.findAll()
-    return genders.data.map(gender => this.generateGenderInterface(gender))
+    const genders = await this.findAll();
+    return genders.data.map((gender) => this.generateGenderInterface(gender));
   }
 
   async findOneById(id: string): Promise<GenderEntity> {
@@ -91,7 +91,7 @@ export class GendersService {
   private generateGenderInterface(gender: GenderEntity): IGender {
     return {
       id: gender.id,
-      name: gender.display_name
-    }
+      name: gender.display_name,
+    };
   }
 }

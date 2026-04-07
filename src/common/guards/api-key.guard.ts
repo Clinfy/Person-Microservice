@@ -24,14 +24,14 @@ export class ApiKeyGuard implements CanActivate {
 
     const apiCanDo = await Promise.all(
       requiredPermissions.map((permission: string) => this.authClient.apiKeyCanDo(permission, rawApiKey, request)),
-    )
+    );
 
     if (!apiCanDo.some(Boolean)) {
       throw new AuthException(
         'The provided API key does not have permission to access this resource.',
         AuthErrorCodes.INSUFFICIENT_PERMISSIONS,
         HttpStatus.UNAUTHORIZED,
-      )
+      );
     }
 
     return apiCanDo.some(Boolean);

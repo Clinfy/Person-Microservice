@@ -37,7 +37,7 @@ export class AuthClientService {
     return response.data;
   }
 
-  async apiKeyCanDo (permission: string, apiKey:string, request: Request): Promise<boolean> {
+  async apiKeyCanDo(permission: string, apiKey: string, request: Request): Promise<boolean> {
     const authApi = await this.axiosAuthApi(request);
     const response = await authApi.get<boolean>(`/api-keys/can-do/${permission}`, {
       headers: { 'x-api-key': apiKey },
