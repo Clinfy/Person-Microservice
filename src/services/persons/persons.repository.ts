@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { PersonEntity } from 'src/entities/person.entity';
 import { PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
 
@@ -42,5 +42,18 @@ export class PersonsRepository {
       take: limit,
       order: { contact_email: 'ASC' },
     });
+  }
+
+  async findByIds(ids: string[]): Promise<PersonEntity[]> {
+    return await this.ormRepository.findBy({ id: In(ids) });
+  }
+
+  async findAllForCache(page: number, limit: number): Promise<{ data: PersonEntity[]; total: number }> {
+    const [data, total] = await this.ormRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      relations: { gender: true },
+    });
+    return { data, total };
   }
 }
