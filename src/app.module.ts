@@ -17,6 +17,7 @@ import { GendersModule } from 'src/services/genders/genders.module';
 import { OutboxCleanupService } from 'src/cron/outbox-cleanup.service';
 import { OutboxSubscriberService } from 'src/cron/outbox-subscriber.service';
 import { OutboxPublisherService } from 'src/cron/outbox-publisher.service';
+import { PersonsCacheReconciliationService } from 'src/cron/persons-cache-reconciliation.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ScheduleModule } from '@nestjs/schedule';
 import { IsUniqueGenderDisplayNameConstraint } from 'src/common/validators/unique-gender-display_name.validator';
@@ -110,6 +111,7 @@ import { IsUniquePersonalIdValidatorConstraint } from 'src/common/validators/uni
     OutboxCleanupService,
     OutboxSubscriberService,
     OutboxPublisherService,
+    PersonsCacheReconciliationService,
     IsUniqueGenderCodeConstraint,
     IsUniqueGenderDisplayNameConstraint,
     IsUniquePersonalIdValidatorConstraint,
