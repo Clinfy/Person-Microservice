@@ -91,8 +91,8 @@ export class PersonsService implements OnModuleInit {
     } catch (error) {
       throw new PersonException(
         'Persons not found',
-        error.status ?? PersonErrorCodes.PERSON_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
+        PersonErrorCodes.PERSON_NOT_FOUND,
+        error.status ?? HttpStatus.NOT_FOUND,
         error,
       );
     }
