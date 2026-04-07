@@ -24,11 +24,11 @@ export class CreatePersonDto {
   last_name: string;
 
   @IsNotEmpty({ message: 'birth date is obligatory' })
-  @IsDateString({},{ message: 'birth date must be a date' })
+  @IsDateString({}, { message: 'birth date must be a date' })
   birth_date: string;
 
-  @IsNotEmpty({ message: 'personal id is obligatory' })
-  @IsEmail({}, { message: 'personal id must be a valid email' })
+  @IsNotEmpty({ message: 'contact email is obligatory' })
+  @IsEmail({}, { message: 'contact email must be a valid email' })
   contact_email: string;
 
   @IsNotEmpty({ message: 'contact phone is obligatory' })
@@ -58,11 +58,11 @@ export class PatchPersonDto {
   last_name?: string;
 
   @IsOptional()
-  @IsDateString({},{ message: 'birth date must be a date' })
+  @IsDateString({}, { message: 'birth date must be a date' })
   birth_date?: string;
 
   @IsOptional()
-  @IsEmail({}, { message: 'personal id must be a valid email' })
+  @IsEmail({}, { message: 'contact email must be a valid email' })
   contact_email?: string;
 
   @IsOptional()
