@@ -5,13 +5,13 @@ import { collectDefaultMetrics, Counter, Gauge, Histogram, register } from 'prom
 export class MetricsService implements OnModuleInit {
   // ── HTTP metrics ──────────────────────────────────────────────
   readonly httpRequestsTotal = new Counter({
-    name: 'auth_http_requests_total',
+    name: 'person_http_requests_total',
     help: 'Total number of HTTP requests',
     labelNames: ['method', 'route', 'status_code'] as const,
   });
 
   readonly httpRequestDuration = new Histogram({
-    name: 'auth_http_request_duration_seconds',
+    name: 'person_http_request_duration_seconds',
     help: 'HTTP request duration in seconds',
     labelNames: ['method', 'route', 'status_code'] as const,
     buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
@@ -19,26 +19,26 @@ export class MetricsService implements OnModuleInit {
 
   // ── Dependency metrics ────────────────────────────────────────
   readonly dependencyDuration = new Histogram({
-    name: 'auth_dependency_duration_seconds',
+    name: 'person_dependency_duration_seconds',
     help: 'Duration of external dependency calls in seconds',
     labelNames: ['dependency', 'operation', 'result'] as const,
     buckets: [0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5],
   });
 
   readonly dependencyErrorsTotal = new Counter({
-    name: 'auth_dependency_errors_total',
+    name: 'person_dependency_errors_total',
     help: 'Total number of dependency errors',
     labelNames: ['dependency', 'operation', 'error_type'] as const,
   });
 
   // ── Outbox metrics ────────────────────────────────────────────
   readonly outboxBatchSize = new Gauge({
-    name: 'auth_outbox_batch_size',
+    name: 'person_outbox_batch_size',
     help: 'Number of pending outbox events processed per batch',
   });
 
   onModuleInit() {
-    collectDefaultMetrics({ prefix: 'auth_' });
+    collectDefaultMetrics({ prefix: 'person_' });
   }
 
   async getMetrics(): Promise<string> {
