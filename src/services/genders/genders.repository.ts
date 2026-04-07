@@ -36,6 +36,10 @@ export class GenderRepository {
     });
   }
 
+  async findAllForDetails(): Promise<GenderEntity[]> {
+    return await this.ormRepository.find();
+  }
+
   async remove(gender: GenderEntity): Promise<void> {
     await this.ormRepository.remove(gender);
   }
