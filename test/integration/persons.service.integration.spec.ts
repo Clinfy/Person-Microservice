@@ -73,7 +73,6 @@ describe('PersonsService — integration (Testcontainers)', () => {
   let service: PersonsService;
   let georefMock: jest.Mocked<GeorefService>;
   let redisMock: ReturnType<typeof buildRedisMock>;
-  let genderRepo: DataSource['manager']['getRepository'] extends (...args: any) => infer R ? R : never;
 
   // Seed: one gender entity shared across the suite
   let seedGenderId: string;
