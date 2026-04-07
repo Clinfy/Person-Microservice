@@ -59,7 +59,7 @@ export class OutboxCleanupService {
         totalDeleted,
       });
     } catch (error) {
-      this.logger.warn('Failed to clean up sent outbox messages', {
+      this.logger.error('Failed to clean up sent outbox messages', {
         context: 'OutboxCleanupService',
         operation: 'cleanSentOutboxMessages',
         error: serializeError(error),
