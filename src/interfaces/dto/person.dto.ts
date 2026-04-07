@@ -1,7 +1,7 @@
 import {
   ArrayNotEmpty,
   IsArray,
-  IsDate,
+  IsDateString,
   IsEmail,
   IsIn,
   IsNotEmpty,
@@ -24,8 +24,8 @@ export class CreatePersonDto {
   last_name: string;
 
   @IsNotEmpty({ message: 'birth date is obligatory' })
-  @IsDate({ message: 'birth date must be a date' })
-  birth_date: Date;
+  @IsDateString({},{ message: 'birth date must be a date' })
+  birth_date: string;
 
   @IsNotEmpty({ message: 'personal id is obligatory' })
   @IsEmail({}, { message: 'personal id must be a valid email' })
@@ -58,8 +58,8 @@ export class PatchPersonDto {
   last_name?: string;
 
   @IsOptional()
-  @IsDate({ message: 'birth date must be a date' })
-  birth_date?: Date;
+  @IsDateString({},{ message: 'birth date must be a date' })
+  birth_date?: string;
 
   @IsOptional()
   @IsEmail({}, { message: 'personal id must be a valid email' })

@@ -26,8 +26,8 @@ export class PersonEntity extends BaseEntity {
   @Column()
   last_name: string;
 
-  @Column()
-  birth_date: Date;
+  @Column({type: 'date'})
+  birth_date: string;
 
   @Index('IDX_contact_email')
   @Column()

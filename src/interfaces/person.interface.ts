@@ -5,7 +5,7 @@ export interface IPerson {
   last_name: string;
   personal_id: string;
   gender: string;
-  birth_date: Date;
+  birth_date: string;
   age: number;
   contact_email: string;
   contact_phone: string;
