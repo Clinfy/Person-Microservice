@@ -18,7 +18,7 @@ export class PersonsCacheReconciliationService {
     private readonly logger: Logger,
   ) {}
 
-  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_12_HOURS)
   async handlePersonsCacheReconciliation(): Promise<void> {
     const start = Date.now();
 
