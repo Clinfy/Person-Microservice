@@ -55,21 +55,21 @@ export class PersonsController {
 
   @UseGuards(AuthGuard)
   @EndpointKey('persons.find')
-  @Patch('find/id/:id')
+  @Get('find/id/:id')
   findOneById(@Param('id', ParseUUIDPipe) id: string): Promise<PersonEntity> {
     return this.personsService.findOneById(id);
   }
 
   @UseGuards(AuthGuard)
   @EndpointKey('persons.find')
-  @Patch('find/dni/:dni')
+  @Get('find/dni/:dni')
   findOneByPersonalId(@Param('dni') dni: string): Promise<PersonEntity> {
     return this.personsService.findOneByPersonalId(dni);
   }
 
   @UseGuards(AuthGuard)
   @EndpointKey('persons.find')
-  @Patch('all')
+  @Get('all')
   findAll(@Query() query: PaginationQueryDto): Promise<PaginatedResponseDto<PersonEntity>> {
     return this.personsService.findAll(query);
   }
