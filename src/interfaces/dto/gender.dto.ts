@@ -20,10 +20,10 @@ export class PatchGenderDto {
   @IsOptional()
   @Matches(/^[a-z_-]+$/, { message: 'Code must contain only lowercase letters separated by hyphens or underscores' })
   @IsUniqueGenderCode()
-  code: string;
+  code?: string;
 
   @IsString({ message: 'Display name must be a string' })
   @IsOptional()
   @IsUniqueGenderDisplayName()
-  display_name: string;
+  display_name?: string;
 }
