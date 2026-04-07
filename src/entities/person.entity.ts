@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -28,6 +29,7 @@ export class PersonEntity extends BaseEntity {
   @Column()
   birth_date: Date;
 
+  @Index('IDX_contact_email')
   @Column()
   contact_email: string;
 
