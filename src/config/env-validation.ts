@@ -1,5 +1,5 @@
 import { plainToInstance } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, validateSync } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
   @IsString()
@@ -27,8 +27,8 @@ class EnvironmentVariables {
   PORT: number;
 
   @IsOptional()
-  @IsBoolean()
-  METRICS_ENABLED?: boolean;
+  @IsIn(['true', 'false'])
+  METRICS_ENABLED?: string;
 }
 
 export function validate(config: Record<string, unknown>) {
