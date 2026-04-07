@@ -26,28 +26,28 @@ export class PersonsController {
   }
 
   @UseGuards(AuthGuard)
-  @EndpointKey('persons.edit')
+  @EndpointKey('persons.update')
   @Patch('edit/details/:id')
   updatePersonalDetails(@Param('id', ParseUUIDPipe) id: string, @Body() dto: PatchPersonDto): Promise<PersonEntity> {
     return this.personsService.updatePersonalData(id, dto);
   }
 
   @UseGuards(AuthGuard)
-  @EndpointKey('persons.edit')
+  @EndpointKey('persons.update')
   @Patch('edit/gender/:id')
   updatePersonGender(@Param('id', ParseUUIDPipe) id: string, @Body() dto: PatchPersonGenderDto): Promise<PersonEntity> {
     return this.personsService.updatePersonGender(id, dto);
   }
 
   @UseGuards(AuthGuard)
-  @EndpointKey('persons.edit')
+  @EndpointKey('persons.update')
   @Patch('edit/dni/:id')
   updatePersonalId(@Param('id', ParseUUIDPipe) id: string, @Body() dto: PatchPersonIdDto): Promise<PersonEntity> {
     return this.personsService.updatePersonalId(id, dto);
   }
 
   @UseGuards(AuthGuard)
-  @EndpointKey('persons.edit')
+  @EndpointKey('persons.update')
   @Patch('edit/address/:id')
   updatePersonAddress(@Param('id', ParseUUIDPipe) id: string, @Body() dto: AddressDto): Promise<PersonEntity> {
     return this.personsService.updatePersonAddress(id, dto);
