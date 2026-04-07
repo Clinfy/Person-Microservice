@@ -12,5 +12,6 @@ import { GendersModule } from 'src/services/genders/genders.module';
   imports: [TypeOrmModule.forFeature([PersonEntity]), GeorefModule, GendersModule],
   controllers: [PersonsController, PersonsConsumer],
   providers: [PersonsService, PersonsRepository],
+  exports: [PersonsRepository, PersonsService],
 })
 export class PersonsModule {}
