@@ -78,7 +78,7 @@ describe('PersonsService — integration (Testcontainers)', () => {
   let seedGenderId: string;
 
   beforeAll(async () => {
-    container = await new PostgreSqlContainer('postgres:16-alpine')
+    container = await new PostgreSqlContainer('postgres:18-alpine')
       .withDatabase('person_test')
       .withUsername('test')
       .withPassword('test')
@@ -172,7 +172,7 @@ describe('PersonsService — integration (Testcontainers)', () => {
     const dto: CreatePersonDto = {
       first_name: 'John',
       last_name: 'Doe',
-      birth_date: new Date('1990-01-01'),
+      birth_date: '1990-01-01',
       contact_email: `john-${Date.now()}@example.com`,
       contact_phone: '+5491112345678',
       personal_id: String(Math.floor(10_000_000 + Math.random() * 89_999_999)),

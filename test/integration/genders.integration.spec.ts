@@ -42,7 +42,7 @@ describe('GendersService — integration (Testcontainers)', () => {
 
   // Start a real PostgreSQL container once for the whole suite
   beforeAll(async () => {
-    container = await new PostgreSqlContainer('postgres:16-alpine')
+    container = await new PostgreSqlContainer('postgres:18-alpine')
       .withDatabase('person_test')
       .withUsername('test')
       .withPassword('test')
