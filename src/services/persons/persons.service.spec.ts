@@ -87,6 +87,7 @@ function buildRedisMock() {
   const multi = buildMultiMock();
   return {
     get: jest.fn(),
+    mGet: jest.fn(),
     multi: jest.fn().mockReturnValue(multi),
     _multi: multi,
   };
@@ -648,7 +649,7 @@ describe('PersonsService', () => {
     it('should return all persons from cache when all are cached', async () => {
       const person = buildPerson();
       const iperson = service.generatePersonInterface(person);
-      redisMock.get.mockResolvedValue(JSON.stringify(iperson));
+      redisMock.mGet.mockResolvedValue([JSON.stringify(iperson), JSON.stringify(iperson)]);
 
       const result = await service.getBatchPersonDetails(['person-uuid-1', 'person-uuid-2']);
 
@@ -664,7 +665,7 @@ describe('PersonsService', () => {
       const iperson1 = service.generatePersonInterface(person1);
 
       // person-uuid-1 is cached, person-uuid-2 is a miss
-      redisMock.get.mockResolvedValueOnce(JSON.stringify(iperson1)).mockResolvedValueOnce(null);
+      redisMock.mGet.mockResolvedValue([JSON.stringify(iperson1), null]);
 
       personsRepository.findByIds.mockResolvedValue([person2]);
 
@@ -687,7 +688,7 @@ describe('PersonsService', () => {
       const person = buildPerson({ id: 'person-uuid-1' });
       const iperson = service.generatePersonInterface(person);
 
-      redisMock.get.mockResolvedValueOnce(JSON.stringify(iperson)).mockResolvedValueOnce(null);
+      redisMock.mGet.mockResolvedValue([JSON.stringify(iperson), null]);
 
       personsRepository.findByIds.mockRejectedValue(new Error('DB failure'));
 
@@ -701,7 +702,7 @@ describe('PersonsService', () => {
 
     it('should load each miss back into Redis after fetching from DB', async () => {
       const person = buildPerson({ id: 'person-uuid-1' });
-      redisMock.get.mockResolvedValue(null);
+      redisMock.mGet.mockResolvedValue([null]);
       personsRepository.findByIds.mockResolvedValue([person]);
 
       await service.getBatchPersonDetails(['person-uuid-1']);
