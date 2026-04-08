@@ -1,0 +1,68 @@
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  Unique,
+  UpdateDateColumn,
+} from 'typeorm';
+import { GenderEntity } from 'src/entities/gender.entity';
+import type { IGeoref } from 'src/clients/georef/georef.interface';
+import type { AuthUser } from 'src/clients/auth/auth-client.interface';
+
+@Unique('UQ_person_personal_id', ['personal_id'])
+@Entity('person')
+export class PersonEntity extends BaseEntity {
+  @PrimaryColumn('uuid', { default: () => 'uuidv7()' })
+  id: string;
+
+  @Column()
+  first_name: string;
+
+  @Column()
+  last_name: string;
+
+  @Column({ type: 'date' })
+  birth_date: string;
+
+  @Index('IDX_contact_email')
+  @Column()
+  contact_email: string;
+
+  @Column()
+  contact_phone: string;
+
+  @Column()
+  personal_id: string;
+
+  @Column({ type: 'jsonb' })
+  address: IGeoref;
+
+  @ManyToOne(() => GenderEntity, (gender) => gender.persons, {
+    nullable: false,
+    eager: true,
+    onDelete: 'RESTRICT',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn()
+  gender: GenderEntity;
+
+  @Column({ default: false })
+  has_employee_profile: boolean;
+
+  @Column({ default: false })
+  has_patient_profile: boolean;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @Column({ type: 'jsonb', nullable: true })
+  created_by: AuthUser | null;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+}

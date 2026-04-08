@@ -1,0 +1,129 @@
+[
+  {
+    "id": "TASK_1",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Agregar Guard Para API Key",
+    "description": "",
+    "status": "DONE",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 12,
+        "second": 58,
+        "nano": 503516190
+      }
+    },
+    "isImported": false
+  },
+  {
+    "id": "TASK_3",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Implementar funciones de patch para person",
+    "description": "",
+    "status": "DONE",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 13,
+        "second": 17,
+        "nano": 215457462
+      }
+    },
+    "finishDate": {
+      "date": {
+        "year": 2026,
+        "month": 4,
+        "day": 7
+      },
+      "time": {
+        "hour": 22,
+        "minute": 26,
+        "second": 40,
+        "nano": 117581787
+      }
+    },
+    "isImported": false
+  },
+  {
+    "id": "TASK_6",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Terminar todos los endpoints de person",
+    "description": "",
+    "status": "DONE",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 13,
+        "second": 27,
+        "nano": 595843627
+      }
+    },
+    "finishDate": {
+      "date": {
+        "year": 2026,
+        "month": 4,
+        "day": 7
+      },
+      "time": {
+        "hour": 22,
+        "minute": 26,
+        "second": 44,
+        "nano": 354585576
+      }
+    },
+    "isImported": false
+  },
+  {
+    "id": "TASK_10",
+    "priority": "LOW",
+    "tags": [],
+    "title": "Incorporar redis para cache de person",
+    "description": "",
+    "status": "DONE",
+    "date": {
+      "date": {
+        "year": 2026,
+        "month": 3,
+        "day": 31
+      },
+      "time": {
+        "hour": 20,
+        "minute": 13,
+        "second": 41,
+        "nano": 523931564
+      }
+    },
+    "finishDate": {
+      "date": {
+        "year": 2026,
+        "month": 4,
+        "day": 7
+      },
+      "time": {
+        "hour": 22,
+        "minute": 26,
+        "second": 47,
+        "nano": 492731900
+      }
+    },
+    "isImported": false
+  }
+]
