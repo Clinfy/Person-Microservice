@@ -1,4 +1,5 @@
 import {
+  ArrayMaxSize,
   ArrayNotEmpty,
   IsArray,
   IsDateString,
@@ -96,6 +97,7 @@ export class AssignPersonRoleDto {
 export class BatchPersonDetailsDto {
   @IsArray({ message: 'ids must be an array' })
   @ArrayNotEmpty({ message: 'ids must not be empty' })
+  @ArrayMaxSize(100, { message: 'ids must not contain more than 100 items' })
   @IsUUID('7', { each: true, message: 'Each id must be a valid UUID v7' })
   ids: string[];
 }
