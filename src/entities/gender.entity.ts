@@ -6,7 +6,7 @@ import { PersonEntity } from 'src/entities/person.entity';
 @Unique('UQ_gender_display_name', ['display_name'])
 @Entity('gender')
 export class GenderEntity extends BaseEntity {
-  @PrimaryColumn('uuid', {default: () => 'uuidv7()'})
+  @PrimaryColumn('uuid', { default: () => 'uuidv7()' })
   id: string;
 
   @Column()

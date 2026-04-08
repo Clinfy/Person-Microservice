@@ -23,7 +23,7 @@ import { AddressDto } from 'src/interfaces/dto/address.dto';
 
 @Injectable()
 export class PersonsService implements OnModuleInit {
-  private static readonly MAX_BATCH_SIZE: number = 100
+  private static readonly MAX_BATCH_SIZE: number = 100;
 
   constructor(
     private readonly personsRepository: PersonsRepository,
@@ -189,8 +189,7 @@ export class PersonsService implements OnModuleInit {
   }
 
   async getBatchPersonDetails(ids: string[]): Promise<Record<string, IPerson>> {
-
-    if(ids.length > PersonsService.MAX_BATCH_SIZE) {
+    if (ids.length > PersonsService.MAX_BATCH_SIZE) {
       throw new PersonException(
         `Batch size exceeds maximum of ${PersonsService.MAX_BATCH_SIZE}`,
         PersonErrorCodes.REQUEST_BATCH_SIZE_EXCEEDED,
@@ -217,18 +216,18 @@ export class PersonsService implements OnModuleInit {
           continue;
         }
         try {
-          result[id] = JSON.parse(hit) as IPerson
+          result[id] = JSON.parse(hit) as IPerson;
         } catch {
           misses.push(id);
         }
       }
     } catch (error) {
       this.logger.warn('Failed to read batch persons from Redis, falling back to database', {
-          context: "PersonsService",
-          operation: 'getBatchPersonDetails',
-          person_ids: uniqueIds,
-          error: serializeError(error),
-        });
+        context: 'PersonsService',
+        operation: 'getBatchPersonDetails',
+        person_ids: uniqueIds,
+        error: serializeError(error),
+      });
       misses.push(...uniqueIds);
     }
 
@@ -244,7 +243,6 @@ export class PersonsService implements OnModuleInit {
           multi.sAdd('persons', entity.id);
         }
         await multi.exec();
-
       } catch (error) {
         this.logger.error('Failed to read batch persons from database', {
           context: 'PersonsService',

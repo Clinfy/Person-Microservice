@@ -282,7 +282,7 @@ describe('PersonsService', () => {
       const dto: CreatePersonDto = {
         first_name: 'John',
         last_name: 'Doe',
-        birth_date:'1990-01-01',
+        birth_date: '1990-01-01',
         contact_email: 'john@example.com',
         contact_phone: '+5491112345678',
         personal_id: '12345678',
