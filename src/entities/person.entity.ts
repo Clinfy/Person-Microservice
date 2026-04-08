@@ -52,10 +52,10 @@ export class PersonEntity extends BaseEntity {
   gender: GenderEntity;
 
   @Column({ default: false })
-  is_employee: boolean;
+  has_employee_profile: boolean;
 
   @Column({ default: false })
-  is_patient: boolean;
+  has_patient_profile: boolean;
 
   @CreateDateColumn()
   created_at: Date;

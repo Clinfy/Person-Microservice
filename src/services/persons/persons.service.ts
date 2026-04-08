@@ -143,8 +143,8 @@ export class PersonsService implements OnModuleInit {
     try {
       const person = await this.findOneById(dto.person_id);
 
-      if (dto.role === 'employee') person.is_employee = true;
-      if (dto.role === 'patient') person.is_patient = true;
+      if (dto.role === 'employee') person.has_employee_profile = true;
+      if (dto.role === 'patient') person.has_patient_profile = true;
 
       await this.personsRepository.save(person);
     } catch (error) {
