@@ -1,8 +1,8 @@
 {
   "name": "clinfy-person-microservice",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "Microservice for person basic data management, used as source of truth for other microservices that require this information.",
+  "author": "Agustín Liendo Ortiz",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
