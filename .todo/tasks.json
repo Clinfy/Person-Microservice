@@ -5,7 +5,7 @@
     "tags": [],
     "title": "Agregar Guard Para API Key",
     "description": "",
-    "status": "TODO",
+    "status": "DONE",
     "date": {
       "date": {
         "year": 2026,
@@ -27,7 +27,7 @@
     "tags": [],
     "title": "Implementar funciones de patch para person",
     "description": "",
-    "status": "TODO",
+    "status": "DONE",
     "date": {
       "date": {
         "year": 2026,
@@ -41,6 +41,19 @@
         "nano": 215457462
       }
     },
+    "finishDate": {
+      "date": {
+        "year": 2026,
+        "month": 4,
+        "day": 7
+      },
+      "time": {
+        "hour": 22,
+        "minute": 26,
+        "second": 40,
+        "nano": 117581787
+      }
+    },
     "isImported": false
   },
   {
@@ -49,7 +62,7 @@
     "tags": [],
     "title": "Terminar todos los endpoints de person",
     "description": "",
-    "status": "TODO",
+    "status": "DONE",
     "date": {
       "date": {
         "year": 2026,
@@ -63,6 +76,19 @@
         "nano": 595843627
       }
     },
+    "finishDate": {
+      "date": {
+        "year": 2026,
+        "month": 4,
+        "day": 7
+      },
+      "time": {
+        "hour": 22,
+        "minute": 26,
+        "second": 44,
+        "nano": 354585576
+      }
+    },
     "isImported": false
   },
   {
@@ -71,7 +97,7 @@
     "tags": [],
     "title": "Incorporar redis para cache de person",
     "description": "",
-    "status": "TODO",
+    "status": "DONE",
     "date": {
       "date": {
         "year": 2026,
@@ -83,6 +109,19 @@
         "minute": 13,
         "second": 41,
         "nano": 523931564
+      }
+    },
+    "finishDate": {
+      "date": {
+        "year": 2026,
+        "month": 4,
+        "day": 7
+      },
+      "time": {
+        "hour": 22,
+        "minute": 26,
+        "second": 47,
+        "nano": 492731900
       }
     },
     "isImported": false
