@@ -81,8 +81,8 @@ export class GendersService {
     } catch (error) {
       throw new GenderException(
         'Genders not found',
-        error.status ?? GenderErrorCodes.GENDER_NOT_FOUND,
-        HttpStatus.NOT_FOUND,
+        GenderErrorCodes.GENDER_NOT_FOUND,
+        error.status ?? HttpStatus.NOT_FOUND,
         error,
       );
     }
