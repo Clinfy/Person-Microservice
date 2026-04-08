@@ -460,8 +460,8 @@ describe('PersonsService — integration (Testcontainers)', () => {
       await service.updateRoles(dto);
 
       const stored = await dataSource.getRepository(PersonEntity).findOneBy({ id: created.id });
-      expect(stored!.is_employee).toBe(true);
-      expect(stored!.is_patient).toBe(false);
+      expect(stored!.has_employee_profile).toBe(true);
+      expect(stored!.has_patient_profile).toBe(false);
     });
 
     it('should set is_patient = true and persist', async () => {
@@ -471,8 +471,8 @@ describe('PersonsService — integration (Testcontainers)', () => {
       await service.updateRoles(dto);
 
       const stored = await dataSource.getRepository(PersonEntity).findOneBy({ id: created.id });
-      expect(stored!.is_patient).toBe(true);
-      expect(stored!.is_employee).toBe(false);
+      expect(stored!.has_patient_profile).toBe(true);
+      expect(stored!.has_employee_profile).toBe(false);
     });
 
     it('should silently discard when person does not exist', async () => {

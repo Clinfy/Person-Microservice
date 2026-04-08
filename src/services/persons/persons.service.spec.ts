@@ -62,8 +62,8 @@ const buildPerson = (overrides: Partial<PersonEntity> = {}): PersonEntity =>
     personal_id: '12345678',
     address: mockAddress,
     gender: buildGender(),
-    is_employee: false,
-    is_patient: false,
+    has_employee_profile: false,
+    has_patient_profile: false,
     created_at: new Date('2024-01-01'),
     created_by: null,
     updated_at: new Date('2024-01-01'),
@@ -221,7 +221,7 @@ describe('PersonsService', () => {
       const dto: CreatePersonDto = {
         first_name: 'John',
         last_name: 'Doe',
-        birth_date: new Date('1990-01-01'),
+        birth_date: '1990-01-01',
         contact_email: 'john@example.com',
         contact_phone: '+5491112345678',
         personal_id: '12345678',
@@ -256,7 +256,7 @@ describe('PersonsService', () => {
       const dto: CreatePersonDto = {
         first_name: 'John',
         last_name: 'Doe',
-        birth_date: new Date('1990-01-01'),
+        birth_date: '1990-01-01',
         contact_email: 'john@example.com',
         contact_phone: '+5491112345678',
         personal_id: '12345678',
@@ -282,7 +282,7 @@ describe('PersonsService', () => {
       const dto: CreatePersonDto = {
         first_name: 'John',
         last_name: 'Doe',
-        birth_date: new Date('1990-01-01'),
+        birth_date:'1990-01-01',
         contact_email: 'john@example.com',
         contact_phone: '+5491112345678',
         personal_id: '12345678',
@@ -304,7 +304,7 @@ describe('PersonsService', () => {
       const dto: CreatePersonDto = {
         first_name: 'John',
         last_name: 'Doe',
-        birth_date: new Date('1990-01-01'),
+        birth_date: '1990-01-01',
         contact_email: 'john@example.com',
         contact_phone: '+5491112345678',
         personal_id: '12345678',
@@ -533,31 +533,31 @@ describe('PersonsService', () => {
   // ─── updateRoles ──────────────────────────────────────────────────────────
 
   describe('updateRoles', () => {
-    it('should set is_employee = true when role is employee', async () => {
-      const person = buildPerson({ is_employee: false });
+    it('should set has_employee_profile = true when role is employee', async () => {
+      const person = buildPerson({ has_employee_profile: false });
       const dto: AssignPersonRoleDto = { person_id: 'person-uuid-1', role: 'employee' };
 
       personsRepository.findOneById.mockResolvedValue(person);
-      personsRepository.save.mockResolvedValue({ ...person, is_employee: true } as PersonEntity);
+      personsRepository.save.mockResolvedValue({ ...person, has_employee_profile: true } as PersonEntity);
 
       await service.updateRoles(dto);
 
-      expect(person.is_employee).toBe(true);
-      expect(person.is_patient).toBe(false);
+      expect(person.has_employee_profile).toBe(true);
+      expect(person.has_patient_profile).toBe(false);
       expect(personsRepository.save).toHaveBeenCalledWith(person);
     });
 
-    it('should set is_patient = true when role is patient', async () => {
-      const person = buildPerson({ is_patient: false });
+    it('should set has_patient_profile = true when role is patient', async () => {
+      const person = buildPerson({ has_patient_profile: false });
       const dto: AssignPersonRoleDto = { person_id: 'person-uuid-1', role: 'patient' };
 
       personsRepository.findOneById.mockResolvedValue(person);
-      personsRepository.save.mockResolvedValue({ ...person, is_patient: true } as PersonEntity);
+      personsRepository.save.mockResolvedValue({ ...person, has_patient_profile: true } as PersonEntity);
 
       await service.updateRoles(dto);
 
-      expect(person.is_patient).toBe(true);
-      expect(person.is_employee).toBe(false);
+      expect(person.has_patient_profile).toBe(true);
+      expect(person.has_employee_profile).toBe(false);
     });
 
     it('should silently discard when person is not found (PERSON_NOT_FOUND)', async () => {
@@ -723,7 +723,7 @@ describe('PersonsService', () => {
 
   describe('generatePersonInterface', () => {
     it('should map PersonEntity fields to IPerson', () => {
-      const person = buildPerson({ birth_date: new Date('1990-01-01') });
+      const person = buildPerson({ birth_date: '1990-01-01' });
 
       const result = service.generatePersonInterface(person);
 
@@ -739,7 +739,7 @@ describe('PersonsService', () => {
     });
 
     it('should compute age from birth_date using differenceInYears', () => {
-      const birthDate = new Date('2000-01-01');
+      const birthDate = '2000-01-01';
       const person = buildPerson({ birth_date: birthDate });
 
       const result = service.generatePersonInterface(person);
