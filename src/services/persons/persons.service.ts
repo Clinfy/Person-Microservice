@@ -23,6 +23,8 @@ import { AddressDto } from 'src/interfaces/dto/address.dto';
 
 @Injectable()
 export class PersonsService implements OnModuleInit {
+  private static readonly MAX_BATCH_SIZE: number = 100
+
   constructor(
     private readonly personsRepository: PersonsRepository,
     private readonly georefService: GeorefService,
@@ -187,29 +189,64 @@ export class PersonsService implements OnModuleInit {
   }
 
   async getBatchPersonDetails(ids: string[]): Promise<Record<string, IPerson>> {
+
+    if(ids.length > PersonsService.MAX_BATCH_SIZE) {
+      throw new PersonException(
+        `Batch size exceeds maximum of ${PersonsService.MAX_BATCH_SIZE}`,
+        PersonErrorCodes.REQUEST_BATCH_SIZE_EXCEEDED,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const result: Record<string, IPerson> = {};
 
-    const cached = await Promise.all(ids.map((id) => this.redisService.raw.get(this.redisKey(id))));
+    if (ids.length === 0) return result;
 
+    const uniqueIds = [...new Set(ids)];
+    const keys = uniqueIds.map((id) => this.redisKey(id));
     const misses: string[] = [];
-    for (let i = 0; i < ids.length; i++) {
-      const hit = cached[i];
-      if (hit === null) {
-        misses.push(ids[i]);
-      } else {
-        result[ids[i]] = JSON.parse(hit) as IPerson;
+
+    try {
+      const responses = await this.redisService.raw.mGet(keys);
+
+      for (let i = 0; i < uniqueIds.length; i++) {
+        const id = uniqueIds[i];
+        const hit = responses?.[i];
+
+        if (!hit) {
+          misses.push(id);
+          continue;
+        }
+        try {
+          result[id] = JSON.parse(hit) as IPerson
+        } catch {
+          misses.push(id);
+        }
       }
+    } catch (error) {
+      this.logger.warn('Failed to read batch persons from Redis, falling back to database', {
+          context: "PersonsService",
+          operation: 'getBatchPersonDetails',
+          person_ids: uniqueIds,
+          error: serializeError(error),
+        });
+      misses.push(...uniqueIds);
     }
 
     if (misses.length > 0) {
       try {
         const entities = await this.personsRepository.findByIds(misses);
+        const multi = this.redisService.raw.multi();
+
         for (const entity of entities) {
-          result[entity.id] = this.generatePersonInterface(entity);
-          await this.loadPersonToRedis(entity);
+          const person = this.generatePersonInterface(entity);
+          result[entity.id] = person;
+          multi.set(this.redisKey(entity.id), JSON.stringify(person));
+          multi.sAdd('persons', entity.id);
         }
+        await multi.exec();
+
       } catch (error) {
-        this.logger.warn('Failed to fetch persons during batch details fetch', {
+        this.logger.error('Failed to read batch persons from database', {
           context: 'PersonsService',
           operation: 'getBatchPersonDetails',
           person_ids: misses,
@@ -217,7 +254,6 @@ export class PersonsService implements OnModuleInit {
         });
       }
     }
-
     return result;
   }
 
