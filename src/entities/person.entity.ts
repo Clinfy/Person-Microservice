@@ -6,7 +6,6 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,7 +16,7 @@ import type { AuthUser } from 'src/clients/auth/auth-client.interface';
 @Unique('UQ_person_personal_id', ['personal_id'])
 @Entity('person')
 export class PersonEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @Column('uuid', { default: () => 'uuidv7()', primary: true })
   id: string;
 
   @Column()
@@ -26,7 +25,7 @@ export class PersonEntity extends BaseEntity {
   @Column()
   last_name: string;
 
-  @Column({type: 'date'})
+  @Column({ type: 'date' })
   birth_date: string;
 
   @Index('IDX_contact_email')

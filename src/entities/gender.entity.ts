@@ -4,7 +4,6 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,7 +14,7 @@ import { PersonEntity } from 'src/entities/person.entity';
 @Unique('UQ_gender_display_name', ['display_name'])
 @Entity('gender')
 export class GenderEntity extends BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @Column('uuid', {default: () => 'uuidv7()' , primary: true})
   id: string;
 
   @Column()

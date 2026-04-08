@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index } from 'typeorm';
 
 export enum OutboxStatus {
   PENDING = 'PENDING',
@@ -10,7 +10,7 @@ export enum OutboxStatus {
 @Index('idx_outbox_sent_cleanup', ['status'], { where: '"status" = \'SENT\'' })
 @Entity('outbox')
 export class OutboxEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @Column('uuid', { default: () => 'uuidv7()', primary: true })
   id: string;
 
   @Column()

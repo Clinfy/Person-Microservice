@@ -44,7 +44,7 @@ export class CreatePersonDto {
   address: AddressDto;
 
   @IsNotEmpty({ message: 'gender is obligatory' })
-  @IsUUID('4', { message: 'gender must be a valid UUID' })
+  @IsUUID('7', { message: 'gender must be a valid UUID' })
   gender: string;
 }
 
@@ -72,7 +72,7 @@ export class PatchPersonDto {
 
 export class PatchPersonGenderDto {
   @IsNotEmpty({ message: 'gender is obligatory' })
-  @IsUUID('4', { message: 'gender must be a valid UUID' })
+  @IsUUID('7', { message: 'gender must be a valid UUID' })
   gender: string;
 }
 
@@ -84,7 +84,7 @@ export class PatchPersonIdDto {
 }
 
 export class AssignPersonRoleDto {
-  @IsUUID('4')
+  @IsUUID('7')
   @IsNotEmpty()
   person_id: string;
 
@@ -96,6 +96,6 @@ export class AssignPersonRoleDto {
 export class BatchPersonDetailsDto {
   @IsArray({ message: 'ids must be an array' })
   @ArrayNotEmpty({ message: 'ids must not be empty' })
-  @IsUUID('4', { each: true, message: 'Each id must be a valid UUID v4' })
+  @IsUUID('7', { each: true, message: 'Each id must be a valid UUID v7' })
   ids: string[];
 }
