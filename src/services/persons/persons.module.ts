@@ -4,12 +4,12 @@ import { PersonsController } from './persons.controller';
 import { PersonsConsumer } from './persons.consumer';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonEntity } from 'src/entities/person.entity';
-import { GeorefModule } from 'src/clients/georef/georef.module';
 import { PersonsRepository } from 'src/services/persons/persons.repository';
 import { GendersModule } from 'src/services/genders/genders.module';
+import { GeoapifyModule } from 'src/clients/geoapify/geoapify.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PersonEntity]), GeorefModule, GendersModule],
+  imports: [TypeOrmModule.forFeature([PersonEntity]), GeoapifyModule, GendersModule],
   controllers: [PersonsController, PersonsConsumer],
   providers: [PersonsService, PersonsRepository],
   exports: [PersonsRepository, PersonsService],

@@ -22,6 +22,10 @@ class EnvironmentVariables {
   @IsNotEmpty()
   AUTH_SERVICE_API_KEY: string;
 
+  @IsString()
+  @IsNotEmpty()
+  GEOAPIFY_API_KEY: string;
+
   @IsNumber()
   @IsOptional()
   PORT: number;

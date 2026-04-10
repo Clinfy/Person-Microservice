@@ -8,7 +8,7 @@ import { PersonsService } from 'src/services/persons/persons.service';
 import { PersonsRepository } from 'src/services/persons/persons.repository';
 import { GendersService } from 'src/services/genders/genders.service';
 import { GenderRepository } from 'src/services/genders/genders.repository';
-import { GeorefService } from 'src/clients/georef/georef.service';
+import { GeoapifyService } from 'src/clients/geoapify/geoapify.service';
 import { RequestContextService } from 'src/common/context/request-context.service';
 import { RedisService } from 'src/common/redis/redis.service';
 import { PersonEntity } from 'src/entities/person.entity';
@@ -16,7 +16,7 @@ import { GenderEntity } from 'src/entities/gender.entity';
 import { OutboxEntity } from 'src/entities/outbox.entity';
 import { PersonErrorCodes, PersonException } from 'src/services/persons/persons.exception';
 import { PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
-import { IGeoref } from 'src/clients/georef/georef.interface';
+import { IGeoapify } from 'src/clients/geoapify/geoapify.interface';
 import {
   AssignPersonRoleDto,
   CreatePersonDto,
@@ -35,10 +35,12 @@ const mockUser = {
   session_id: 'session-1',
 };
 
-const mockAddress: IGeoref = {
-  address_line: 'Av. Corrientes 1234',
+const mockAddress: IGeoapify = {
+  address: 'Av. Corrientes 1234',
+  district: 'San Nicolás',
   city: 'Buenos Aires',
   province: 'Buenos Aires',
+  postcode: '1043',
   lat: -34.6037,
   lon: -58.3816,
 };
@@ -71,7 +73,7 @@ describe('PersonsService — integration (Testcontainers)', () => {
   let dataSource: DataSource;
   let module: TestingModule;
   let service: PersonsService;
-  let georefMock: jest.Mocked<GeorefService>;
+  let geoapifyMock: jest.Mocked<GeoapifyService>;
   let redisMock: ReturnType<typeof buildRedisMock>;
 
   // Seed: one gender entity shared across the suite
@@ -86,9 +88,9 @@ describe('PersonsService — integration (Testcontainers)', () => {
 
     redisMock = buildRedisMock();
 
-    georefMock = {
+    geoapifyMock = {
       normalizeAddress: jest.fn().mockResolvedValue(mockAddress),
-    } as unknown as jest.Mocked<GeorefService>;
+    } as unknown as jest.Mocked<GeoapifyService>;
 
     module = await Test.createTestingModule({
       imports: [
@@ -111,8 +113,8 @@ describe('PersonsService — integration (Testcontainers)', () => {
         GendersService,
         GenderRepository,
         {
-          provide: GeorefService,
-          useValue: georefMock,
+          provide: GeoapifyService,
+          useValue: geoapifyMock,
         },
         {
           provide: RequestContextService,
@@ -163,7 +165,7 @@ describe('PersonsService — integration (Testcontainers)', () => {
     redisMock._multi.del.mockReturnThis();
     redisMock._multi.sRem.mockReturnThis();
     redisMock.multi.mockReturnValue(redisMock._multi);
-    georefMock.normalizeAddress.mockResolvedValue(mockAddress);
+    geoapifyMock.normalizeAddress.mockResolvedValue(mockAddress);
   });
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -209,7 +211,7 @@ describe('PersonsService — integration (Testcontainers)', () => {
       } as any;
       await createTestPerson({ address: addressDto });
 
-      expect(georefMock.normalizeAddress).toHaveBeenCalledWith(addressDto);
+      expect(geoapifyMock.normalizeAddress).toHaveBeenCalledWith(addressDto);
     });
 
     it('should persist two persons independently', async () => {
@@ -220,9 +222,9 @@ describe('PersonsService — integration (Testcontainers)', () => {
       expect(count).toBe(2);
     });
 
-    it('should throw PersonException when georef fails', async () => {
-      georefMock.normalizeAddress.mockRejectedValueOnce(
-        Object.assign(new Error('Georef unavailable'), { status: HttpStatus.BAD_GATEWAY }),
+    it('should throw PersonException when geoapify fails', async () => {
+      geoapifyMock.normalizeAddress.mockRejectedValueOnce(
+        Object.assign(new Error('Geoapify unavailable'), { status: HttpStatus.BAD_GATEWAY }),
       );
 
       const error = await createTestPerson().catch((e) => e);
@@ -415,10 +417,12 @@ describe('PersonsService — integration (Testcontainers)', () => {
 
   describe('updatePersonAddress', () => {
     it('should normalize and persist the new address', async () => {
-      const newAddress: IGeoref = {
-        address_line: 'Av. Santa Fe 100',
+      const newAddress: IGeoapify = {
+        address: 'Av. Santa Fe 100',
+        district: 'Palermo',
         city: 'Buenos Aires',
         province: 'Buenos Aires',
+        postcode: '1425',
         lat: -34.59,
         lon: -58.39,
       };
@@ -427,7 +431,7 @@ describe('PersonsService — integration (Testcontainers)', () => {
       const created = await createTestPerson();
 
       // Override for the address update call
-      georefMock.normalizeAddress.mockResolvedValueOnce(newAddress);
+      geoapifyMock.normalizeAddress.mockResolvedValueOnce(newAddress);
 
       const dto: AddressDto = {
         street_one: 'Av. Santa Fe',

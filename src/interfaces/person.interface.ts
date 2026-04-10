@@ -1,4 +1,4 @@
-import { IGeoref } from 'src/clients/georef/georef.interface';
+import { IGeoapify } from 'src/clients/geoapify/geoapify.interface';
 
 export interface IPerson {
   first_name: string;
@@ -9,5 +9,5 @@ export interface IPerson {
   age: number;
   contact_email: string;
   contact_phone: string;
-  address: IGeoref;
+  address: IGeoapify;
 }
