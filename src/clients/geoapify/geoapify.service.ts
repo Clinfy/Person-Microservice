@@ -1,19 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { propagateAxiosError } from 'src/common/utils/propagate-axios-error';
 import { AddressDto } from 'src/interfaces/dto/address.dto';
 import { GeoapifyResponse, IGeoapify } from 'src/clients/geoapify/geoapify.interface';
+import { GeoapifyErrorCodes, GeoapifyException } from 'src/clients/geoapify/geoapify.exception';
 
 @Injectable()
 export class GeoapifyService {
-  constructor(
-    private readonly configService: ConfigService
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
-  async normalizeAddress (dto: AddressDto): Promise<IGeoapify> {
-    const geoapifyApi = await this.geoapifyApi(dto.street_number, dto.street_one, dto.postal_code, dto.locality, dto.province);
+  async normalizeAddress(dto: AddressDto): Promise<IGeoapify> {
+    const geoapifyApi = await this.geoapifyApi(
+      dto.street_number,
+      dto.street_one,
+      dto.postal_code,
+      dto.locality,
+      dto.province,
+    );
     const response = await geoapifyApi.get<GeoapifyResponse>('');
+
+    if (response.data.results[0].rank.confidence < 0.6) {
+      throw new GeoapifyException(
+        'The provided address information is not accurate enough to be considered a valid address.',
+        GeoapifyErrorCodes.UNTRUSTED_LOCATION,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const data = response.data.results[0];
 
     return {
@@ -26,7 +40,7 @@ export class GeoapifyService {
       lon: data.lon,
     };
   }
-  
+
   private async geoapifyApi(number: number, street: string, postcode: number, city: string, province: string) {
     const apiKey = this.configService.get<string>('GEOAPIFY_API_KEY');
 
