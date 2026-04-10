@@ -32,7 +32,7 @@ export class GeoapifyService {
 
     if (data.rank.confidence < 0.6) {
       throw new GeoapifyException(
-        'The provided address information is not accurate enough to be considered a valid address.',
+        'The provided address information is not accurate enough to be considered a valid address. Check the provided information and try again.',
         GeoapifyErrorCodes.UNTRUSTED_LOCATION,
         HttpStatus.BAD_REQUEST,
       );
