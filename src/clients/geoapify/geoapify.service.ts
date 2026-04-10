@@ -20,6 +20,14 @@ export class GeoapifyService {
     );
     const response = await geoapifyApi.get<GeoapifyResponse>('');
 
+    if (response.data.results.length === 0) {
+      throw new GeoapifyException(
+        'Address not found. Please check the provided information and try again.',
+        GeoapifyErrorCodes.ADDRESS_NOT_FOUND,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (response.data.results[0].rank.confidence < 0.6) {
       throw new GeoapifyException(
         'The provided address information is not accurate enough to be considered a valid address.',
