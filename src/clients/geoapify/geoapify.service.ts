@@ -28,15 +28,15 @@ export class GeoapifyService {
       );
     }
 
-    if (response.data.results[0].rank.confidence < 0.6) {
+    const data = response.data.results[0];
+
+    if (data.rank.confidence < 0.6) {
       throw new GeoapifyException(
         'The provided address information is not accurate enough to be considered a valid address.',
         GeoapifyErrorCodes.UNTRUSTED_LOCATION,
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    const data = response.data.results[0];
 
     return {
       address: data.address_line1,
