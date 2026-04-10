@@ -11,9 +11,11 @@ import {
   IsString,
   IsUUID,
   Matches,
+  ValidateNested,
 } from 'class-validator';
 import { AddressDto } from 'src/interfaces/dto/address.dto';
 import { IsUniquePersonalId } from 'src/common/validators/unique-personal-id.validator';
+import { Type } from 'class-transformer';
 
 export class CreatePersonDto {
   @IsNotEmpty({ message: 'first name is obligatory' })
@@ -42,6 +44,8 @@ export class CreatePersonDto {
   personal_id: string;
 
   @IsNotEmpty({ message: 'address is obligatory' })
+  @ValidateNested()
+  @Type(()=> AddressDto)
   address: AddressDto;
 
   @IsNotEmpty({ message: 'gender is obligatory' })

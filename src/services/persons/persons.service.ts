@@ -1,6 +1,5 @@
 import { HttpStatus, Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { PersonsRepository } from 'src/services/persons/persons.repository';
-import { GeorefService } from 'src/clients/georef/georef.service';
 import {
   AssignPersonRoleDto,
   CreatePersonDto,
@@ -20,6 +19,7 @@ import { RedisService } from 'src/common/redis/redis.service';
 import { IPerson } from 'src/interfaces/person.interface';
 import { differenceInYears } from 'date-fns';
 import { AddressDto } from 'src/interfaces/dto/address.dto';
+import { GeoapifyService } from 'src/clients/geoapify/geoapify.service';
 
 @Injectable()
 export class PersonsService implements OnModuleInit {
@@ -27,7 +27,7 @@ export class PersonsService implements OnModuleInit {
 
   constructor(
     private readonly personsRepository: PersonsRepository,
-    private readonly georefService: GeorefService,
+    private readonly geoapifyService: GeoapifyService,
     private readonly gendersService: GendersService,
     private readonly contextService: RequestContextService,
     private readonly redisService: RedisService,
@@ -50,7 +50,7 @@ export class PersonsService implements OnModuleInit {
 
   async create(dto: CreatePersonDto): Promise<PersonEntity> {
     try {
-      const address = await this.georefService.normalizeAddress(dto.address);
+      const address = await this.geoapifyService.normalizeAddress(dto.address);
       const gender = await this.gendersService.findOneById(dto.gender);
 
       const person = await this.personsRepository.save(
@@ -132,7 +132,7 @@ export class PersonsService implements OnModuleInit {
 
   async updatePersonAddress(id: string, dto: AddressDto): Promise<PersonEntity> {
     const person = await this.findOneById(id);
-    const newAddress = await this.georefService.normalizeAddress(dto);
+    const newAddress = await this.geoapifyService.normalizeAddress(dto);
 
     const updated = await this.personsRepository.save(await this.personsRepository.merge(person, { address: newAddress }));
 

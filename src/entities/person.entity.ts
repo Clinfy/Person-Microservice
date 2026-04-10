@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { GenderEntity } from 'src/entities/gender.entity';
-import type { IGeoref } from 'src/clients/georef/georef.interface';
+import type { IGeoapify } from 'src/clients/geoapify/geoapify.interface';
 import type { AuthUser } from 'src/clients/auth/auth-client.interface';
 
 @Unique('UQ_person_personal_id', ['personal_id'])
@@ -40,7 +40,7 @@ export class PersonEntity extends BaseEntity {
   personal_id: string;
 
   @Column({ type: 'jsonb' })
-  address: IGeoref;
+  address: IGeoapify;
 
   @ManyToOne(() => GenderEntity, (gender) => gender.persons, {
     nullable: false,
