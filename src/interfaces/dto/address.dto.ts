@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class AddressDto {
   @IsNotEmpty({ message: 'Street one field is required' })
   @IsString({ message: 'Street one input must be an string' })
   street_one: string;
 
-  @IsOptional()
+  @IsNotEmpty({ message: 'Street number field is required' })
   @IsNumber({}, { message: 'Street number input must be a number' })
   street_number: number;
 
