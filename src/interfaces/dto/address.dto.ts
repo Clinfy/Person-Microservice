@@ -7,15 +7,15 @@ export class AddressDto {
 
   @IsOptional()
   @IsNumber({}, { message: 'Street number input must be a number' })
-  street_number?: number;
-
-  @IsOptional()
-  @IsString({ message: 'Street two input must be an string' })
-  street_two?: string;
+  street_number: number;
 
   @IsNotEmpty({ message: 'Province field is required' })
   @IsString({ message: 'Province input must be an string' })
   province: string;
+
+  @IsNotEmpty({ message: 'Postal code field is required' })
+  @IsNumber({}, { message: 'Postal code input must be an string' })
+  postal_code: number;
 
   @IsNotEmpty({ message: 'Locality field is required' })
   @IsString({ message: 'Locality input must be an string' })
