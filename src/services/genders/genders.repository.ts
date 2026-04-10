@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GenderEntity } from 'src/entities/gender.entity';
 import { Repository } from 'typeorm';
 import { PaginationQueryDto } from 'src/interfaces/dto/pagination.dto';
+import { IGender } from 'src/interfaces/gender.interface';
 
 @Injectable()
 export class GenderRepository {
@@ -36,8 +37,12 @@ export class GenderRepository {
     });
   }
 
-  async findAllForDetails(): Promise<GenderEntity[]> {
-    return await this.ormRepository.find();
+  async findAllForDetails(): Promise<IGender[]> {
+    return await this.ormRepository.createQueryBuilder('gender')
+      .select('gender.id', 'id')
+      .addSelect('gender.display_name', 'name')
+      .orderBy('gender.display_name', 'ASC')
+      .getRawMany<IGender>();
   }
 
   async remove(gender: GenderEntity): Promise<void> {
